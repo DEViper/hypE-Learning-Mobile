@@ -8,12 +8,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hype_learning_flutter/main.dart';
+import 'package:hype_learning_flutter/models/UserRepository.dart';
 
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(App(userRepository: new UserRepository(),));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
