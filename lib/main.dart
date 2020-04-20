@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hype_learning_flutter/login/login_page.dart';
 import 'package:hype_learning_flutter/models/UserRepository.dart';
 
@@ -9,6 +11,8 @@ import 'package:hype_learning_flutter/authentication/authentication.dart';
 import 'package:hype_learning_flutter/splash/splash.dart';
 import 'package:hype_learning_flutter/home/home.dart';
 import 'package:hype_learning_flutter/common/common.dart';
+
+GetIt getIt = GetIt.instance;
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -31,6 +35,8 @@ class SimpleBlocDelegate extends BlocDelegate {
 }
 
 void main() {
+  final storage = new FlutterSecureStorage();
+  getIt.registerSingleton<FlutterSecureStorage>(storage, signalsReady: true);
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepository = UserRepository();
   runApp(

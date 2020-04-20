@@ -1,3 +1,5 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hype_learning_flutter/main.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -23,6 +25,8 @@ class UserRepository {
       var jsonResponse = convert.jsonDecode(response.body);
       var accessToken = jsonResponse['accessToken'];
       print(accessToken);
+      // await getIt.isReady<FlutterSecureStorage>().then((_) => getIt<FlutterSecureStorage>().write(key: "token", value: accessToken));
+
       return accessToken;
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -38,13 +42,17 @@ class UserRepository {
 
   Future<void> persistToken(String token) async {
     /// write to keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
+    await getIt<FlutterSecureStorage>().write(key: "token", value: token);
+    var xd = await getIt<FlutterSecureStorage>().read(key: "token");
+
+    print("XD => " + xd);
+
+
     return;
   }
 
   Future<bool> hasToken() async {
-    /// read from keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
-    return false;
+    var token = await getIt<FlutterSecureStorage>().read(key: "token");
+    return token != null ? true : false;
   }
 }
