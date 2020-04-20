@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hype_learning_flutter/authentication/authentication.dart';
 import 'package:hype_learning_flutter/login/bloc/login_bloc.dart';
 
 class LoginForm extends StatefulWidget {
@@ -31,6 +32,10 @@ class _LoginFormState extends State<LoginForm> {
               backgroundColor: Colors.red,
             ),
           );
+        }
+
+        if (state is LoggedIn) {
+          Navigator.of(context).pushReplacementNamed("/courses");
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
