@@ -1,40 +1,30 @@
 import 'package:flutter/material.dart';
-
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:hype_learning_flutter/app.dart';
-import 'package:hype_learning_flutter/locator.dart';
-import 'package:hype_learning_flutter/login/login_page.dart';
-import 'package:hype_learning_flutter/models/CoursesRepository.dart';
-import 'package:hype_learning_flutter/models/UserRepository.dart';
+import 'package:provider/provider.dart';
 
-import 'package:hype_learning_flutter/authentication/authentication.dart';
-import 'package:hype_learning_flutter/routes.dart';
-import 'package:hype_learning_flutter/simple_bloc_delegate.dart';
-import 'package:hype_learning_flutter/splash/splash.dart';
-import 'package:hype_learning_flutter/home/home.dart';
-import 'package:hype_learning_flutter/common/common.dart';
+import 'app.dart';
+import 'application.dart';
+import 'blocs/auth/bloc.dart';
+import 'blocs/user/bloc.dart';
 
-GetIt getIt = GetIt.instance;
+void main() async {
+  // timeDilation = 3.0;
+  Provider.debugCheckInvalidValueType = null;
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  setupLocator();
-  BlocSupervisor.delegate = SimpleBlocDelegate();
-  final userRepository = UserRepository();
-  final coursesRepository = CoursesRepository();
+  final application = Application();
+
+  await application.setup();
+  await application.init();
+
   runApp(
-    BlocProvider<AuthenticationBloc>(
-      create: (context) {
-        return AuthenticationBloc(userRepository: userRepository)
-          ..add(AppStarted());
-      },
-      child: App(
-        userRepository: userRepository,
-        coursesRepository: coursesRepository,
+    MultiBlocProvider(providers: [
+      BlocProvider<AuthBloc>.value(
+        value: application.authBloc,
       ),
-    ),
+      BlocProvider<UserBloc>.value(
+        value: application.userBloc,
+      ),
+    ], child: HypeLearningApp(application: application)),
   );
 }
-
-

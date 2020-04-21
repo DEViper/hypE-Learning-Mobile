@@ -1,39 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hype_learning_flutter/authentication/authentication_bloc.dart';
-import 'package:hype_learning_flutter/authentication/authentication_state.dart';
-import 'package:hype_learning_flutter/common/loading_indicator.dart';
-import 'package:hype_learning_flutter/home/home_page.dart';
-import 'package:hype_learning_flutter/login/login_page.dart';
-import 'package:hype_learning_flutter/models/CoursesRepository.dart';
-import 'package:hype_learning_flutter/models/UserRepository.dart';
-import 'package:hype_learning_flutter/routes.dart';
-import 'package:hype_learning_flutter/splash/splash_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hype_learning_flutter/repositories/user/repository.dart';
+// import 'package:hype_learning_flutter/repositories/articles/repository.dart';
 
-class App extends StatelessWidget {
-  final UserRepository userRepository;
-  final CoursesRepository coursesRepository;
-  App({Key key, @required this.userRepository, @required this.coursesRepository}) : super(key: key);
+import 'application.dart';
+import 'blocs/user/bloc.dart';
+import 'localizations/hl_localizations.dart';
+import 'routes.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+@immutable
+class HypeLearningApp extends StatelessWidget {
+  final Application application;
+
+  const HypeLearningApp({
+    this.application,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // initialRoute: '/',
-      routes: routes,
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state) {
-      if (state is AuthenticationAuthenticated) {
-        return HomePage(coursesRepository: coursesRepository);
-      }
-      if (state is AuthenticationUnauthenticated) {
-        return LoginPage(userRepository: userRepository);
-      }
-      if (state is AuthenticationLoading) {
-        return LoadingIndicator();
-      }
-      return SplashPage();
-          },
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<UserRepository>.value(
+          value: application.userRepository,
         ),
+      ],
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState state) {
+          return MaterialApp(
+            locale: const Locale('pl', ''),
+            onGenerateTitle: (BuildContext context) =>
+                HLLocalizations.of(context).appName,
+            color: Colors.green,
+            theme: ThemeData(
+              fontFamily: 'SourceSansPro',
+              primaryColor: const Color(0xFF039BE5),
+            ),
+            // navigatorKey: navigatorKey,
+            localizationsDelegates: [
+              const HLLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            supportedLocales: [
+              const Locale('pl'),
+            ],
+            onGenerateRoute: routes(
+              application: application,
+            ),
+            debugShowCheckedModeBanner: false,
+          );
+        },
+      ),
     );
   }
 }
