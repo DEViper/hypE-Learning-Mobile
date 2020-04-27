@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hype_learning/providers/courses.dart';
 import 'package:provider/provider.dart';
 
 import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
+import 'screens/course_detail_screen.dart';
 import 'screens/courses_overview_screen.dart';
 import 'screens/signIn_screen.dart';
 import 'screens/splash_screen.dart';
@@ -19,6 +21,11 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider.value(
             value: Auth(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Courses>(
+            create: (ctx) => Courses(),
+            update: (context, auth, courses) =>
+                courses.update(auth.token, auth.userId, courses == null ? [] : courses.courses,),
           ),
         ],
         child: Consumer<Auth>(
@@ -48,6 +55,8 @@ class MyApp extends StatelessWidget {
             routes: {
               SignInScreen.routeName: (ctx) => SignInScreen(),
               SignUpScreen.routeName: (ctx) => SignUpScreen(),
+              CourseDetailScreen.routeName: (ctx) => CourseDetailScreen(),
+              CoursesOverviewScreen.routeName: (ctx) => CoursesOverviewScreen(),
             },
           ),
         ));

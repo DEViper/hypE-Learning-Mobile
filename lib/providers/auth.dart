@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../helpers/JwtDecoder.dart';
+import '../config/constants.dart';
 import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
@@ -38,7 +39,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    final url = 'https://hype-learning.herokuapp.com/auth/signin';
+    final url = Constants.API_URL+"auth/signin";
     try {
       final response = await http.post(
         url,
@@ -96,7 +97,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(
       String email, String password, String firstName, String lastName) async {
-    final url = 'https://hype-learning.herokuapp.com/auth/signup';
+    final url = Constants.API_URL+'auth/signup';
     try {
       final response = await http.post(
         url,
