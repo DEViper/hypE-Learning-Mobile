@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 // import '../widgets/app_drawer.dart';
 // import '../widgets/products_grid.dart';
@@ -50,7 +51,9 @@ class _CoursesOverviewScreenState extends State<CoursesOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Text("hehehe");
+    return RaisedButton(onPressed: () {
+      Provider.of<Auth>(context, listen: false).logout();
+    });
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text('MyShop'),

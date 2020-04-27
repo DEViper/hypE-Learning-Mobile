@@ -37,20 +37,17 @@ class Auth with ChangeNotifier {
     return _userId;
   }
 
-  Future<void> _authenticate(
-      String email, String password, String urlSegment) async {
-    final url =
-        'https://hype-learning.herokuapp.com/auth/$urlSegment';
+  Future<void> login(String email, String password) async {
+    final url = 'https://hype-learning.herokuapp.com/auth/signin';
     try {
       final response = await http.post(
         url,
-        headers:{'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json'},
         body: json.encode(
           {
             'email': email,
             'password': password,
           },
-          
         ),
       );
       final responseData = json.decode(response.body);
@@ -66,14 +63,13 @@ class Auth with ChangeNotifier {
       _fileUrl = responseData['fileUrl'];
       _email = responseData['email'];
       _decodedToken = JwtDecoder.tryParseJwt(_token);
-      
+
       var values = _decodedToken.values.toList();
       var expiresIn = values[2];
-      
+
       _expiryDate = DateTime.now().add(
         Duration(
-          seconds: 
-            expiresIn,
+          seconds: expiresIn,
         ),
       );
       _autoLogout();
@@ -84,13 +80,12 @@ class Auth with ChangeNotifier {
           'token': _token,
           'userId': _userId,
           'expiryDate': _expiryDate.toIso8601String(),
-          'firstName':_firstName,
+          'firstName': _firstName,
           'lastName': _lastName,
           'email': _email,
           'role': _role,
           'isBlocked': _isBlocked,
           'fileUrl': _fileUrl
-
         },
       );
       prefs.setString('userData', userData);
@@ -99,12 +94,31 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password) async {
-    return _authenticate(email, password, 'signup');
-  }
+  Future<void> signup(
+      String email, String password, String firstName, String lastName) async {
+    final url = 'https://hype-learning.herokuapp.com/auth/signup';
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'email': email,
+            'password': password,
+            'firstName': firstName,
+            'lastName': lastName,
+          },
+        ),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
 
-  Future<void> login(String email, String password) async {
-    return _authenticate(email, password, 'signin');
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<bool> tryAutoLogin() async {
@@ -112,7 +126,8 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
     final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
 
     if (expiryDate.isBefore(DateTime.now())) {

@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
 import 'screens/courses_overview_screen.dart';
-import 'screens/auth_screen.dart';
+import 'screens/signIn_screen.dart';
 import 'screens/splash_screen.dart';
+import 'screens/signUp_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,10 +43,13 @@ class MyApp extends StatelessWidget {
                         authResultSnapshot.connectionState ==
                                 ConnectionState.waiting
                             ? SplashScreen()
-                            : AuthScreen(),
+                            : SignInScreen(),
                   ),
+            routes: {
+              SignInScreen.routeName: (ctx) => SignInScreen(),
+              SignUpScreen.routeName: (ctx) => SignUpScreen(),
+            },
           ),
-        )
-        );
+        ));
   }
 }

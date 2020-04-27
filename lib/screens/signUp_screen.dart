@@ -1,15 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:hype_learning/providers/auth.dart';
+import 'package:hype_learning/screens/signIn_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 import '../models/http_exception.dart';
+enum SignUpMode { Signup, Login }
 
-enum AuthMode { Signup, Login }
-
-class AuthScreen extends StatelessWidget {
-  static const routeName = '/auth';
+class SignUpScreen extends StatelessWidget {
+  static const routeName = '/SignUp';
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,7 @@ class AuthScreen extends StatelessWidget {
                   ),
                   Flexible(
                     flex: deviceSize.width > 600 ? 2 : 1,
-                    child: AuthCard(),
+                    child: SignUpCard(),
                   ),
                 ],
               ),
@@ -85,22 +86,25 @@ class AuthScreen extends StatelessWidget {
   }
 }
 
-class AuthCard extends StatefulWidget {
-  const AuthCard({
+class SignUpCard extends StatefulWidget {
+  const SignUpCard({
     Key key,
   }) : super(key: key);
 
   @override
-  _AuthCardState createState() => _AuthCardState();
+  _SignUpCardState createState() => _SignUpCardState();
 }
 
-class _AuthCardState extends State<AuthCard>
+class _SignUpCardState extends State<SignUpCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.Login;
-  Map<String, String> _authData = {
+  SignUpMode _SignUpMode = SignUpMode.Login;
+
+  Map<String, String> _signUpData = {
     'email': '',
     'password': '',
+    'firstName': '',
+    'lastName': '',
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -146,17 +150,17 @@ class _AuthCardState extends State<AuthCard>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: Text('An Error Occurred!'),
-            content: Text(message),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Okay'),
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-              )
-            ],
-          ),
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -170,21 +174,14 @@ class _AuthCardState extends State<AuthCard>
       _isLoading = true;
     });
     try {
-      if (_authMode == AuthMode.Login) {
-        // Log user in
-        await Provider.of<Auth>(context, listen: false).login(
-          _authData['email'],
-          _authData['password'],
-        );
-      } else {
-        // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
-          _authData['email'],
-          _authData['password'],
-        );
-      }
+      await Provider.of<Auth>(context, listen: false).signup(
+        _signUpData['email'],
+        _signUpData['password'],
+        _signUpData['firstName'],
+        _signUpData['lastName'],
+      );
     } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
+      var errorMessage = 'SignUpentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
         errorMessage = 'This email address is already in use.';
       } else if (error.toString().contains('INVALID_EMAIL')) {
@@ -199,7 +196,7 @@ class _AuthCardState extends State<AuthCard>
       _showErrorDialog(errorMessage);
     } catch (error) {
       const errorMessage =
-          'Could not authenticate you. Please try again later.';
+          'Could not SignUpenticate you. Please try again later.';
       _showErrorDialog(errorMessage);
     }
 
@@ -208,15 +205,15 @@ class _AuthCardState extends State<AuthCard>
     });
   }
 
-  void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
+  void _switchSignUpMode() {
+    if (_SignUpMode == SignUpMode.Login) {
       setState(() {
-        _authMode = AuthMode.Signup;
+        _SignUpMode = SignUpMode.Signup;
       });
       _controller.forward();
     } else {
       setState(() {
-        _authMode = AuthMode.Login;
+        _SignUpMode = SignUpMode.Login;
       });
       _controller.reverse();
     }
@@ -233,10 +230,10 @@ class _AuthCardState extends State<AuthCard>
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _SignUpMode == SignUpMode.Signup ? 320 : 260,
         // height: _heightAnimation.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _SignUpMode == SignUpMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -244,6 +241,28 @@ class _AuthCardState extends State<AuthCard>
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                   TextFormField(
+                  decoration: InputDecoration(labelText: 'First name'),
+                  validator: (value) {
+                    if (value.isEmpty || value.length < 2) {
+                      return 'First name is too short';
+                    }
+                  },
+                  onSaved: (value) {
+                    _signUpData['firstName'] = value;
+                  },
+                ),
+                   TextFormField(
+                  decoration: InputDecoration(labelText: 'Last name'),
+                  validator: (value) {
+                    if (value.isEmpty || value.length < 2 ) {
+                      return 'Last name is too short';
+                    }
+                  },
+                  onSaved: (value) {
+                    _signUpData['lastName'] = value;
+                  },
+                ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
@@ -253,7 +272,7 @@ class _AuthCardState extends State<AuthCard>
                     }
                   },
                   onSaved: (value) {
-                    _authData['email'] = value;
+                    _signUpData['email'] = value;
                   },
                 ),
                 TextFormField(
@@ -266,36 +285,10 @@ class _AuthCardState extends State<AuthCard>
                     }
                   },
                   onSaved: (value) {
-                    _authData['password'] = value;
+                    _signUpData['password'] = value;
                   },
                 ),
-                AnimatedContainer(
-                  constraints: BoxConstraints(
-                    minHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                    maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
-                  ),
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeIn,
-                  child: FadeTransition(
-                    opacity: _opacityAnimation,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: TextFormField(
-                        enabled: _authMode == AuthMode.Signup,
-                        decoration:
-                            InputDecoration(labelText: 'Confirm Password'),
-                        obscureText: true,
-                        validator: _authMode == AuthMode.Signup
-                            ? (value) {
-                                if (value != _passwordController.text) {
-                                  return 'Passwords do not match!';
-                                }
-                              }
-                            : null,
-                      ),
-                    ),
-                  ),
-                ),
+
                 SizedBox(
                   height: 20,
                 ),
@@ -303,8 +296,7 @@ class _AuthCardState extends State<AuthCard>
                   CircularProgressIndicator()
                 else
                   RaisedButton(
-                    child:
-                        Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                    child: Text('LOGIN'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -316,8 +308,10 @@ class _AuthCardState extends State<AuthCard>
                   ),
                 FlatButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-                  onPressed: _switchAuthMode,
+                      '${_SignUpMode == SignUpMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                                onPressed: () {
+                Navigator.of(context).pushNamed(SignInScreen.routeName);
+              },
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
