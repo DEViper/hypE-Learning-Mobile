@@ -63,19 +63,6 @@ class CourseDetailScreen extends StatelessWidget {
       ],
     );
 
-    //    final  bottomContentText = Padding(
-    // padding: EdgeInsets.all(8.0),
-    // child: Column(children: [
-    //   Center(
-    //     child: Text('Opis',
-    //     style: TextStyle(fontSize: 24.0),),
-    //   ),
-    //       SizedBox(height: 20),
-    //   Text(
-    //     loadedCourse.description,
-    //     style: TextStyle(fontSize: 14.0),
-    //   )
-    // ]));
 
     final bottomAnnouncementText = Padding(
         padding: EdgeInsets.all(8.0),
