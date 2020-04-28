@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/courses.dart';
@@ -62,15 +63,35 @@ class CourseDetailScreen extends StatelessWidget {
           ),
         ),
         Positioned(
-          
-          right: 50,
-          bottom: 20,
+            right: 50,
+            bottom: 20,
             child: IconButton(
                 onPressed: () {
-                  Provider.of<Courses>(context, listen: false).deleteCourse(courseId);
-                  Navigator.of(context).popAndPushNamed(CoursesOverviewScreen.routeName);
+                  Provider.of<Courses>(context, listen: false)
+                      .deleteCourse(courseId);
+                  Navigator.of(context)
+                      .popAndPushNamed(CoursesOverviewScreen.routeName);
                 },
-                icon: Icon(Icons.delete_sweep, color: Colors.white, size: 40,)))
+                icon: Icon(
+                  Icons.delete_sweep,
+                  color: Colors.white,
+                  size: 40,
+                ))),
+        Positioned(
+            left: 50,
+            bottom: 20,
+            child: IconButton(
+                onPressed: () {
+                  Provider.of<Courses>(context, listen: false)
+                      .updateCourse(courseId, loadedCourse);
+                  Navigator.of(context)
+                      .popAndPushNamed(EditCourseScreen.routeName, arguments: {courseId, loadedCourse});
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                  size: 40,
+                )))
       ],
     );
 

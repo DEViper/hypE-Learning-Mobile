@@ -51,7 +51,7 @@ class SignInScreen extends StatelessWidget {
                         'HypE-Learning',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 50,
+                          fontSize: 40,
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                         ),

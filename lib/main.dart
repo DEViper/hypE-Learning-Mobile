@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hype_learning/providers/courses.dart';
 import 'package:hype_learning/screens/add_course_screen.dart';
+import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'helpers/custom_route.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
                 CoursesOverviewScreen.routeName: (ctx) =>
                     CoursesOverviewScreen(),
                 AddCourseScreen.routeName: (ctx) => AddCourseScreen(),
+                EditCourseScreen.routeName: (ctx) => EditCourseScreen(),
               }),
         ));
   }

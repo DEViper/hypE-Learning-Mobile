@@ -90,24 +90,25 @@ class Courses with ChangeNotifier {
     }
   }
 
-  // Future<void> updateCourse(String id, Course newCourse) async {
-  //   final courseIndex = _courses.indexWhere((course) => course.id == id);
-  //   if (courseIndex >= 0) {
-  //     final url =
-  //         'https://flutter-update.firebaseio.com/Courses/$id.json?auth=$authToken';
-  //     await http.patch(url,
-  //         body: json.encode({
-  //           'title': newCourse.title,
-  //           'description': newCourse.description,
-  //           'imageUrl': newCourse.imageUrl,
-  //           'price': newCourse.price
-  //         }));
-  //     _courses[courseIndex] = newCourse;
-  //     notifyListeners();
-  //   } else {
-  //     print('...');
-  //   }
-  // }
+  Future<void> updateCourse(int id, Course newCourse) async {
+    final courseIndex = _courses.indexWhere((course) => course.id == id);
+    if (courseIndex >= 0) {
+       final url = Constants.API_URL + 'courses/$id';
+      await http.put(url,headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+          body: json.encode({
+            'title': newCourse.title,
+            'description': newCourse.description,
+            'announcement': newCourse.announcement,
+          }));
+      _courses[courseIndex] = newCourse;
+      notifyListeners();
+    } else {
+      print('...');
+    }
+  }
 
   Future<void> deleteCourse(int id) async {
     final url = Constants.API_URL + 'courses/$id';
