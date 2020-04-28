@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hype_learning/screens/add_course_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/courses_overview_screen.dart';
@@ -12,22 +13,30 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('Hello Friend!'),
+            title: Text('Witaj!'),
             automaticallyImplyLeading: false,
           ),
           Divider(),
           ListTile(
             leading: Icon(Icons.shop),
-            title: Text('Shop'),
+            title: Text('Profil'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed('/');
             },
           ),
-          Divider(),
+              Divider(),
+          ListTile(
+            leading: Icon(Icons.add),
+            title: Text('Dodaj kurs'),
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(AddCourseScreen.routeName);
+            },
+          ),
           Divider(),
           ListTile(
             leading: Icon(Icons.edit),
-            title: Text('Manage Products'),
+            title: Text('Kursy'),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(CoursesOverviewScreen.routeName);
@@ -36,7 +45,7 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            title: Text('Wyloguj'),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');

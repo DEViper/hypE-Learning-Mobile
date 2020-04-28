@@ -8,7 +8,7 @@ class Course with ChangeNotifier {
   final String announcement;
 
   Course({
-    @required this.id,
+     this.id,
     @required this.title,
     @required this.description,
     @required this.announcement,

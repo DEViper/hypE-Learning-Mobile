@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:hype_learning/config/constants.dart';
-
+import '../config/constants.dart';
 import '../models/http_exception.dart';
 import './course.dart';
 
@@ -18,7 +18,6 @@ class Courses with ChangeNotifier {
   List<Course> get courses {
     return [..._courses];
   }
-
 
   Courses update(authToken, userId, _courses) {
     this.authToken = authToken;
@@ -36,7 +35,7 @@ class Courses with ChangeNotifier {
     try {
       final response = await http.get(
         url,
-        headers: {HttpHeaders.authorizationHeader: this.authToken},
+        headers: {'Authorization': 'Bearer ' + this.authToken, 'Content-Type': 'application/json'},
       );
       final extractedData = json.decode(response.body).toList();
       if (extractedData == null) {
@@ -58,35 +57,32 @@ class Courses with ChangeNotifier {
     }
   }
 
-  // Future<void> addCourse(Course Course) async {
-  //   final url =
-  //       'https://flutter-update.firebaseio.com/Courses.json?auth=$authToken';
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       body: json.encode({
-  //         'title': Course.title,
-  //         'description': Course.description,
-  //         'imageUrl': Course.imageUrl,
-  //         'price': Course.price,
-  //         'creatorId': userId,
-  //       }),
-  //     );
-  //     final newCourse = Course(
-  //       title: Course.title,
-  //       description: Course.description,
-  //       price: Course.price,
-  //       imageUrl: Course.imageUrl,
-  //       id: json.decode(response.body)['name'],
-  //     );
-  //     _courses.add(newCourse);
-  //     // _courses.insert(0, newCourse); // at the start of the list
-  //     notifyListeners();
-  //   } catch (error) {
-  //     print(error);
-  //     throw error;
-  //   }
-  // }
+  Future<void> addCourse(Course course) async {
+    final url = Constants.API_URL + 'courses';
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Authorization': 'Bearer ' + this.authToken,'Content-Type': 'application/json'},
+        body: json.encode({
+          'title': course.title,
+          'description': course.description,
+          'announcement': course.announcement,
+        }),
+      );
+      final newCourse = Course(
+        title: course.title,
+        description: course.description,
+        announcement: course.announcement,
+        id: json.decode(response.body)['id'],
+      );
+      _courses.add(newCourse);
+      // _courses.insert(0, newCourse); // at the start of the list
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
 
   // Future<void> updateCourse(String id, Course newCourse) async {
   //   final courseIndex = _courses.indexWhere((course) => course.id == id);
