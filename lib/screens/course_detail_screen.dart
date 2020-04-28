@@ -10,7 +10,6 @@ class CourseDetailScreen extends StatelessWidget {
   // ProductDetailScreen(this.title, this.price);
   static const routeName = '/course-detail';
 
-
   @override
   Widget build(BuildContext context) {
     final courseId =
@@ -19,56 +18,109 @@ class CourseDetailScreen extends StatelessWidget {
       context,
       listen: false,
     ).findById(courseId);
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(loadedProduct.title),
-      // ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 300,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(loadedCourse.title),
-              background: Hero(
-                tag: loadedCourse.id,
-                child: Image.network(
-                  'https://hypelearning.s3.eu-central-1.amazonaws.com/god_its_me.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
+
+    final topContentText = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: 90.0,
+          child: new Divider(color: Colors.green),
+        ),
+        SizedBox(height: 20.0),
+        Text(
+          loadedCourse.title,
+          style: TextStyle(color: Colors.white, fontSize: 45.0),
+        ),
+        SizedBox(height: 20.0),
+        Text(
+          loadedCourse.description,
+          style: TextStyle(fontSize: 14.0, color: Colors.white),
+        )
+      ],
+    );
+
+    final topContent = Stack(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          padding: EdgeInsets.all(40.0),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(color: Colors.blue[800]),
+          child: Center(
+            child: topContentText,
+          ),
+        ),
+        Positioned(
+          left: 8.0,
+          top: 60.0,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        )
+      ],
+    );
+
+    //    final  bottomContentText = Padding(
+    // padding: EdgeInsets.all(8.0),
+    // child: Column(children: [
+    //   Center(
+    //     child: Text('Opis',
+    //     style: TextStyle(fontSize: 24.0),),
+    //   ),
+    //       SizedBox(height: 20),
+    //   Text(
+    //     loadedCourse.description,
+    //     style: TextStyle(fontSize: 14.0),
+    //   )
+    // ]));
+
+    final bottomAnnouncementText = Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(children: [
+          Center(
+            child: Text(
+              'Ogłoszenia',
+              style: TextStyle(fontSize: 24.0),
             ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                SizedBox(height: 10),
-                Text(
-                  '${loadedCourse.description}',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  width: double.infinity,
-                  child: Text(
-                    loadedCourse.announcement,
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                ),
-                SizedBox(height: 800,),
-              ],
-            ),
-          ),
-        ],
+          SizedBox(height: 20),
+          Text(
+            loadedCourse.announcement,
+            style: TextStyle(fontSize: 14.0),
+          )
+        ]));
+
+    final readButton = Container(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          onPressed: () => {},
+          color: Colors.blue[800],
+          child: Text("Topics",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold)),
+        ));
+
+    final bottomContent = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(40.0),
+      child: Center(
+        child: Column(
+          children: <Widget>[bottomAnnouncementText, readButton],
+        ),
       ),
     );
+
+    return Scaffold(
+        body: ListView(
+      children: <Widget>[topContent, bottomContent],
+    ));
   }
 }

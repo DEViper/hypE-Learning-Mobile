@@ -52,6 +52,9 @@ class _CoursesOverviewScreenState extends State<CoursesOverviewScreen> {
   @override
   Widget build(BuildContext context) {
 
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text('HypE-Learning'),

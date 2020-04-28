@@ -32,9 +32,9 @@ class MyApp extends StatelessWidget {
           builder: (ctx, auth, _) => MaterialApp(
             title: 'HypE-Learning',
             theme: ThemeData(
-              primarySwatch: Colors.purple,
-              accentColor: Colors.deepOrange,
-              fontFamily: 'Roboto',
+              primarySwatch: Colors.blue,
+              accentColor: Colors.greenAccent,
+              fontFamily: 'Montserrat',
               pageTransitionsTheme: PageTransitionsTheme(
                 builders: {
                   TargetPlatform.android: CustomPageTransitionBuilder(),

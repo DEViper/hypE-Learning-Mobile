@@ -26,14 +26,6 @@ class CourseWidget extends StatelessWidget {
               arguments: course.id,
             );
           },
-          child: Hero(
-            tag: course.id,
-            child: FadeInImage(
-              placeholder: AssetImage('assets/images/course-placeholder.png'),
-              image: NetworkImage('https://hypelearning.s3.eu-central-1.amazonaws.com/god_its_me.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
         ),
       ),
     );
