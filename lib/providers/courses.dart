@@ -35,7 +35,10 @@ class Courses with ChangeNotifier {
     try {
       final response = await http.get(
         url,
-        headers: {'Authorization': 'Bearer ' + this.authToken, 'Content-Type': 'application/json'},
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
       );
       final extractedData = json.decode(response.body).toList();
       if (extractedData == null) {
@@ -62,7 +65,10 @@ class Courses with ChangeNotifier {
     try {
       final response = await http.post(
         url,
-        headers: {'Authorization': 'Bearer ' + this.authToken,'Content-Type': 'application/json'},
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
         body: json.encode({
           'title': course.title,
           'description': course.description,
@@ -103,19 +109,25 @@ class Courses with ChangeNotifier {
   //   }
   // }
 
-  // Future<void> deleteCourse(String id) async {
-  //   final url =
-  //       'https://flutter-update.firebaseio.com/Courses/$id.json?auth=$authToken';
-  //   final existingCourseIndex = _courses.indexWhere((course) => course.id == id);
-  //   var existingCourse = _courses[existingCourseIndex];
-  //   _courses.removeAt(existingCourseIndex);
-  //   notifyListeners();
-  //   final response = await http.delete(url);
-  //   if (response.statusCode >= 400) {
-  //     _courses.insert(existingCourseIndex, existingCourse);
-  //     notifyListeners();
-  //     throw HttpException('Could not delete Course.');
-  //   }
-  //   existingCourse = null;
-  // }
+  Future<void> deleteCourse(int id) async {
+    final url = Constants.API_URL + 'courses/$id';
+    final existingCourseIndex =
+        _courses.indexWhere((course) => course.id == id);
+    var existingCourse = _courses[existingCourseIndex];
+    _courses.removeAt(existingCourseIndex);
+    notifyListeners();
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + this.authToken,
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode >= 400) {
+      _courses.insert(existingCourseIndex, existingCourse);
+      notifyListeners();
+      throw HttpException('Nie można usunąć kursu.');
+    }
+    existingCourse = null;
+  }
 }

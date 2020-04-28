@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/courses.dart';
+import 'courses_overview_screen.dart';
 
 class CourseDetailScreen extends StatelessWidget {
   // final String title;
@@ -59,10 +60,19 @@ class CourseDetailScreen extends StatelessWidget {
             },
             child: Icon(Icons.arrow_back, color: Colors.white),
           ),
-        )
+        ),
+        Positioned(
+          
+          right: 50,
+          bottom: 20,
+            child: IconButton(
+                onPressed: () {
+                  Provider.of<Courses>(context, listen: false).deleteCourse(courseId);
+                  Navigator.of(context).popAndPushNamed(CoursesOverviewScreen.routeName);
+                },
+                icon: Icon(Icons.delete_sweep, color: Colors.white, size: 40,)))
       ],
     );
-
 
     final bottomAnnouncementText = Padding(
         padding: EdgeInsets.all(8.0),
