@@ -12,7 +12,7 @@ class CourseDetailScreen extends StatelessWidget {
 
   // ProductDetailScreen(this.title, this.price);
   static const routeName = '/course-detail';
-  final role = SharedPreferencesDecoder.getRole();
+  final role = SharedPreferencesDecoder.getField("role");
 
   @override
   Widget build(BuildContext context) {

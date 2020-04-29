@@ -9,7 +9,7 @@ import '../providers/auth.dart';
 import '../helpers/custom_route.dart';
 
 class AppDrawer extends StatelessWidget {
-  final role = SharedPreferencesDecoder.getRole();
+  final role = SharedPreferencesDecoder.getField("role");
   @override
   Widget build(BuildContext context) {
     return Drawer(
