@@ -30,6 +30,37 @@ class Courses with ChangeNotifier {
     return _courses.firstWhere((course) => course.id == id);
   }
 
+  Future<void> fetchAndSetStudentCourses() async {
+    _courses = new List<Course>();
+    var url = Constants.API_URL + 'users/courses';
+ try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+      );
+      final extractedData = json.decode(response.body).toList(); //check if unathorized
+      if (extractedData == null) {
+        return;
+      }
+      final List<Course> loadedCourses = [];
+      extractedData.forEach((courseData) {
+        loadedCourses.add(Course(
+          id: courseData['id'],
+          title: courseData['title'],
+          description: courseData['description'],
+          announcement: courseData['announcement'],
+        ));
+      });
+      _courses = loadedCourses;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
   Future<void> fetchAndSetCourses() async {
     var url = Constants.API_URL + 'courses';
     try {

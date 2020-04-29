@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hype_learning/screens/add_course_screen.dart';
+import 'package:hype_learning/screens/signIn_screen.dart';
 import 'package:provider/provider.dart';
 import '../helpers/shared_preferences_decoder.dart';
 import '../screens/courses_overview_screen.dart';
+import '../screens/user_profile_screen.dart';
 import '../providers/auth.dart';
 import '../helpers/custom_route.dart';
 
@@ -24,7 +26,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.shop),
             title: Text('Profil'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).pushReplacementNamed(UserProfileScreen.routeName);
             },
           ),
           Divider(),
@@ -51,8 +53,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             title: Text('Wyloguj'),
             onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
 
               // Navigator.of(context)
               //     .pushReplacementNamed(UserProductsScreen.routeName);
