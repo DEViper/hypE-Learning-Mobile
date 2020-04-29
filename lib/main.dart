@@ -3,6 +3,7 @@ import 'package:hype_learning/providers/courses.dart';
 import 'package:hype_learning/screens/add_course_screen.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
@@ -12,7 +13,11 @@ import 'screens/signIn_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/signUp_screen.dart';
 
-void main() {
+SharedPreferences sharedPrefs;
+
+void main () async {
+  WidgetsFlutterBinding.ensureInitialized(); 
+  sharedPrefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
 

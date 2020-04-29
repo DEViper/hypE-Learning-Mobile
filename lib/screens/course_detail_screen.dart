@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ class CourseDetailScreen extends StatelessWidget {
 
   // ProductDetailScreen(this.title, this.price);
   static const routeName = '/course-detail';
+  final role = SharedPreferencesDecoder.getRole();
 
   @override
   Widget build(BuildContext context) {
@@ -62,36 +64,39 @@ class CourseDetailScreen extends StatelessWidget {
             child: Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
-        Positioned(
-            right: 50,
-            bottom: 20,
-            child: IconButton(
-                onPressed: () {
-                  Provider.of<Courses>(context, listen: false)
-                      .deleteCourse(courseId);
-                  Navigator.of(context)
-                      .popAndPushNamed(CoursesOverviewScreen.routeName);
-                },
-                icon: Icon(
-                  Icons.delete_sweep,
-                  color: Colors.white,
-                  size: 40,
-                ))),
-        Positioned(
-            left: 50,
-            bottom: 20,
-            child: IconButton(
-                onPressed: () {
-                  Provider.of<Courses>(context, listen: false)
-                      .updateCourse(courseId, loadedCourse);
-                  Navigator.of(context)
-                      .popAndPushNamed(EditCourseScreen.routeName, arguments: {courseId, loadedCourse});
-                },
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                  size: 40,
-                )))
+        if (role == 'instructor' || role == 'admin')
+          Positioned(
+              right: 50,
+              bottom: 20,
+              child: IconButton(
+                  onPressed: () {
+                    Provider.of<Courses>(context, listen: false)
+                        .deleteCourse(courseId);
+                    Navigator.of(context)
+                        .popAndPushNamed(CoursesOverviewScreen.routeName);
+                  },
+                  icon: Icon(
+                    Icons.delete_sweep,
+                    color: Colors.white,
+                    size: 40,
+                  ))),
+        if (role == 'instructor' || role == 'admin')
+          Positioned(
+              left: 50,
+              bottom: 20,
+              child: IconButton(
+                  onPressed: () {
+                    Provider.of<Courses>(context, listen: false)
+                        .updateCourse(courseId, loadedCourse);
+                    Navigator.of(context).popAndPushNamed(
+                        EditCourseScreen.routeName,
+                        arguments: {courseId, loadedCourse});
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                    size: 40,
+                  )))
       ],
     );
 

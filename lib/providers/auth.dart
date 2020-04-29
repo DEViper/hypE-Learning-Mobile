@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:hype_learning/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../helpers/JwtDecoder.dart';
 import '../config/constants.dart';
@@ -37,6 +38,11 @@ class Auth with ChangeNotifier {
   int get userId {
     return _userId;
   }
+
+  String get role{
+    return _role;
+  }
+
 
   Future<void> login(String email, String password) async {
     final url = Constants.API_URL+"auth/signin";
@@ -75,7 +81,7 @@ class Auth with ChangeNotifier {
       );
       _autoLogout();
       notifyListeners();
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = sharedPrefs;
       final userData = json.encode(
         {
           'token': _token,
@@ -163,4 +169,6 @@ class Auth with ChangeNotifier {
     final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
+
+  
 }
