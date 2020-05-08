@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
@@ -31,10 +32,12 @@ class CourseDetailScreen extends StatelessWidget {
           child: new Divider(color: Colors.green),
         ),
         SizedBox(height: 20.0),
-        Text(
+        Expanded(child:         AutoSizeText(
           loadedCourse.title,
           style: TextStyle(color: Colors.white, fontSize: 45.0),
-        ),
+          maxLines:1,
+        ),),
+
         SizedBox(height: 20.0),
         Text(
           loadedCourse.description,
