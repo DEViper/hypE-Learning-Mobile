@@ -32,14 +32,15 @@ class CourseDetailScreen extends StatelessWidget {
           width: 90.0,
           child: new Divider(color: Colors.green),
         ),
-        SizedBox(height: 20.0),
-        Expanded(
-          child: AutoSizeText(
-            loadedCourse.title,
-            style: TextStyle(color: Colors.white, fontSize: 45.0),
-            maxLines: 1,
+         Row(
+          children: [Expanded(
+            child: AutoSizeText(
+              loadedCourse.title,
+              style: TextStyle(color: Colors.white, fontSize: 45.0),
+              maxLines: 1,
+            ),
           ),
-        ),
+          ]), 
         SizedBox(height: 20.0),
         Text(
           loadedCourse.description,

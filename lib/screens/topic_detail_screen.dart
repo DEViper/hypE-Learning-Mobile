@@ -33,18 +33,19 @@ class TopicDetailScreen extends StatelessWidget {
           width: 90.0,
           child: new Divider(color: Colors.green),
         ),
-        SizedBox(height: 20.0),
-        Expanded(
-          child: AutoSizeText(
-            loadedTopic.title,
-            style: TextStyle(color: Colors.white, fontSize: 45.0),
-            maxLines: 1,
+        Row(
+          children: [Expanded(
+            child: AutoSizeText(
+              loadedTopic.title,
+              style: TextStyle(color: Colors.white, fontSize: 45.0),
+              maxLines: 1,
+            ),
           ),
-        ),
-        SizedBox(height: 20.0),
+          ]),
+        SizedBox(height: 30.0),
         Text(
           loadedTopic.description,
-          style: TextStyle(fontSize: 14.0, color: Colors.white),
+          style: TextStyle(fontSize: 20.0, color: Colors.white),
         )
       ],
     );
@@ -76,10 +77,10 @@ class TopicDetailScreen extends StatelessWidget {
               bottom: 20,
               child: IconButton(
                   onPressed: () {
-                    Provider.of<Courses>(context, listen: false)
-                        .deleteCourse(topicId);
                     Navigator.of(context)
                         .popAndPushNamed(CoursesOverviewScreen.routeName);
+                    Provider.of<Topics>(context, listen: false)
+                        .deleteTopic(topicId);
                   },
                   icon: Icon(
                     Icons.delete_sweep,
@@ -106,55 +107,11 @@ class TopicDetailScreen extends StatelessWidget {
       ],
     );
 
-    // final bottomAnnouncementText = Padding(
-    //     padding: EdgeInsets.all(8.0),
-    //     child: Column(children: [
-    //       Center(
-    //         child: Text(
-    //           'Ogłoszenia',
-    //           style: TextStyle(fontSize: 24.0),
-    //         ),
-    //       ),
-    //       SizedBox(height: 20),
-    //       Text(
-    //         loadedTopic.announcement,
-    //         style: TextStyle(fontSize: 14.0),
-    //       )
-    //     ]));
 
-    final readButton = Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
-        width: MediaQuery.of(context).size.width,
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          onPressed: () {
-            Navigator.of(context).pushNamed(
-              TopicsOverviewScreen.routeName,
-              arguments: topicId,
-            );
-          },
-          color: Colors.blue[800],
-          child: Text("Topics",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold)),
-        ));
-
-    final bottomContent = Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(40.0),
-      child: Center(
-        child: Column(
-          children: <Widget>[readButton],
-        ),
-      ),
-    );
 
     return Scaffold(
         body: ListView(
-      children: <Widget>[topContent, bottomContent],
+      children: <Widget>[topContent],
     ));
   }
 }

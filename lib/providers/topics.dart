@@ -138,7 +138,7 @@ class Topics with ChangeNotifier {
   }
 
   Future<void> deleteTopic(int id) async {
-    final url = Constants.API_URL + 'Topics/$id';
+    final url = Constants.API_URL + 'topics/$id';
     final existingTopicIndex =
         _topics.indexWhere((topic) => topic.id == id);
     var existingTopic = _topics[existingTopicIndex];

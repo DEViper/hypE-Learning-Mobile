@@ -18,16 +18,10 @@ class TopicsList extends StatelessWidget {
     ListTile makeListTile(Topic topic) => ListTile(
           contentPadding:
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          leading: Container(
-            padding: EdgeInsets.only(right: 12.0),
-            decoration: new BoxDecoration(
-                border: new Border(
-                    right: new BorderSide(width: 1.0, color: Colors.white))),
-            child: Icon(Icons.autorenew, color: Colors.white),
-          ),
+
           title: Text(
             topic.title,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.normal, fontSize: 18.0),
           ),
           trailing:
               Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
