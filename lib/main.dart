@@ -12,6 +12,7 @@ import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
 import 'screens/course_detail_screen.dart';
 import 'screens/courses_overview_screen.dart';
+import 'screens/edit_topic_screen.dart';
 import 'screens/signIn_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/signUp_screen.dart';
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
                 TopicDetailScreen.routeName: (ctx) => TopicDetailScreen(),
                 TopicsOverviewScreen.routeName: (ctx) => TopicsOverviewScreen(),
                 AddTopicScreen.routeName: (ctx) => AddTopicScreen(),
+                EditTopicScreen.routeName:(ctx) => EditTopicScreen(),
               }),
         ));
   }

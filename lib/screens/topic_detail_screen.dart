@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/courses.dart';
 import 'courses_overview_screen.dart';
+import 'edit_topic_screen.dart';
 import 'topics_overview_screen.dart';
 
 class TopicDetailScreen extends StatelessWidget {
@@ -92,11 +93,11 @@ class TopicDetailScreen extends StatelessWidget {
               bottom: 20,
               child: IconButton(
                   onPressed: () {
-                    // Provider.of<Topics>(context, listen: false)
-                    //     .updateTopic(topicId, loadedTopic);
-                    // Navigator.of(context).popAndPushNamed(
-                    //     EditTopicScreen.routeName,
-                    //     arguments: {topicId, loadedTopic});
+                    Provider.of<Topics>(context, listen: false)
+                        .updateTopic(topicId, loadedTopic);
+                    Navigator.of(context).popAndPushNamed(
+                        EditTopicScreen.routeName,
+                        arguments: {topicId, loadedTopic});
                   },
                   icon: Icon(
                     Icons.edit,

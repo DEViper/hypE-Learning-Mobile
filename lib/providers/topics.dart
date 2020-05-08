@@ -124,7 +124,7 @@ class Topics with ChangeNotifier {
   Future<void> updateTopic(int id, Topic newTopic) async {
     final topicIndex = _topics.indexWhere((topic) => topic.id == id);
     if (topicIndex >= 0) {
-      final url = Constants.API_URL + 'Topics/$id';
+      final url = Constants.API_URL + 'topics/$id';
       await http.put(url,
           headers: {
             'Authorization': 'Bearer ' + this.authToken,

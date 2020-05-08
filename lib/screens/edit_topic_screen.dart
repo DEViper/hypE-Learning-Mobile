@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:hype_learning/models/arguments/edit_course_arguments.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/course.dart';
-import '../providers/courses.dart';
+import '../providers/topic.dart';
+import '../providers/topics.dart';
 import 'courses_overview_screen.dart';
+import 'topics_overview_screen.dart';
 
-class EditCourseScreen extends StatefulWidget {
-  static const routeName = '/edit-course';
+class EditTopicScreen extends StatefulWidget {
+  static const routeName = '/edit-topic';
 
   @override
-  _EditCourseScreenState createState() => _EditCourseScreenState();
+  _EditTopicScreenState createState() => _EditTopicScreenState();
 }
 
-class _EditCourseScreenState extends State<EditCourseScreen> {
+class _EditTopicScreenState extends State<EditTopicScreen> {
   final _titleFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _announcementFocusNode = FocusNode();
 
   final _form = GlobalKey<FormState>();
-  var _editedCourse = Course(
+  var _editedTopic = Topic(
     id: null,
     title: '',
     description: '',
-    announcement: '',
   );
   var _initValues = {
     'title': '',
     'description': '',
-    'announcement': '',
   };
   var _isInit = true;
   var _isLoading = false;
@@ -43,12 +41,11 @@ class _EditCourseScreenState extends State<EditCourseScreen> {
     if (_isInit) {
       final dynamic args = ModalRoute.of(context).settings.arguments;
       if (args.first != null) {
-        _editedCourse =
-            Provider.of<Courses>(context, listen: false).findById(args.first);
+        _editedTopic =
+            Provider.of<Topics>(context, listen: false).findById(args.first);
         _initValues = {
-          'title': _editedCourse.title,
-          'description': _editedCourse.description,
-          'announcement': _editedCourse.announcement,
+          'title': _editedTopic.title,
+          'description': _editedTopic.description,
         };
       }
     }
@@ -75,8 +72,8 @@ class _EditCourseScreenState extends State<EditCourseScreen> {
     });
 
     try {
-      await Provider.of<Courses>(context, listen: false)
-          .updateCourse(_editedCourse.id, _editedCourse);
+      await Provider.of<Topics>(context, listen: false)
+          .updateTopic(_editedTopic.id, _editedTopic);
     } catch (error) {
       await showDialog(
         context: context,
@@ -87,7 +84,7 @@ class _EditCourseScreenState extends State<EditCourseScreen> {
             FlatButton(
               child: Text('Okay'),
               onPressed: () {
-                Navigator.of(ctx).pushNamed(CoursesOverviewScreen.routeName);
+                Navigator.of(ctx).pushNamed(TopicsOverviewScreen.routeName);
               },
             )
           ],
@@ -104,18 +101,18 @@ class _EditCourseScreenState extends State<EditCourseScreen> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context).pushNamed(
+      Navigator.of(context).popAndPushNamed(
         CoursesOverviewScreen.routeName); // Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-      // final EditCourseArguments args = ModalRoute.of(context).settings.arguments;
-      // int courseId = args.id;
-      // Course course = args.course;
+      // final EditTopicArguments args = ModalRoute.of(context).settings.arguments;
+      // int TopicId = args.id;
+      // Topic Topic = args.Topic;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dodaj kurs'),
+        title: Text('Edytuj temat'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
@@ -148,11 +145,10 @@ class _EditCourseScreenState extends State<EditCourseScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _editedCourse = Course(
+                        _editedTopic = Topic(
                           title: value,
-                          description: _editedCourse.description,
-                          announcement: _editedCourse.announcement,
-                          id: _editedCourse.id,
+                          description: _editedTopic.description,
+                          id: _editedTopic.id,
                         );
                       },
                     ),
@@ -171,33 +167,10 @@ class _EditCourseScreenState extends State<EditCourseScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _editedCourse = Course(
-                          title: _editedCourse.title,
+                        _editedTopic = Topic(
+                          title: _editedTopic.title,
                           description: value,
-                          announcement: _editedCourse.announcement,
-                          id: _editedCourse.id,
-                        );
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _initValues['announcement'],
-                      decoration: InputDecoration(labelText: 'Ogłoszenia'),
-                      textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) {
-                        _saveForm();
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'To pole jest wymagane';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _editedCourse = Course(
-                          title: _editedCourse.title,
-                          description: _editedCourse.description,
-                          announcement: value,
-                          id: _editedCourse.id,
+                          id: _editedTopic.id,
                         );
                       },
                     ),
