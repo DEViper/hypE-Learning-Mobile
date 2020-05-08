@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
+import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -8,22 +9,22 @@ import '../providers/courses.dart';
 import 'courses_overview_screen.dart';
 import 'topics_overview_screen.dart';
 
-class CourseDetailScreen extends StatelessWidget {
+class TopicDetailScreen extends StatelessWidget {
   // final String title;
   // final double price;
 
   // ProductDetailScreen(this.title, this.price);
-  static const routeName = '/course-detail';
+  static const routeName = '/topic-detail';
   final role = SharedPreferencesDecoder.getField("role");
 
   @override
   Widget build(BuildContext context) {
-    final courseId =
+    final topicId =
         ModalRoute.of(context).settings.arguments as int; // is the id!
-    final loadedCourse = Provider.of<Courses>(
+    final loadedTopic = Provider.of<Topics>(
       context,
       listen: false,
-    ).findById(courseId);
+    ).findById(topicId);
 
     final topContentText = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,14 +36,14 @@ class CourseDetailScreen extends StatelessWidget {
         SizedBox(height: 20.0),
         Expanded(
           child: AutoSizeText(
-            loadedCourse.title,
+            loadedTopic.title,
             style: TextStyle(color: Colors.white, fontSize: 45.0),
             maxLines: 1,
           ),
         ),
         SizedBox(height: 20.0),
         Text(
-          loadedCourse.description,
+          loadedTopic.description,
           style: TextStyle(fontSize: 14.0, color: Colors.white),
         )
       ],
@@ -76,7 +77,7 @@ class CourseDetailScreen extends StatelessWidget {
               child: IconButton(
                   onPressed: () {
                     Provider.of<Courses>(context, listen: false)
-                        .deleteCourse(courseId);
+                        .deleteCourse(topicId);
                     Navigator.of(context)
                         .popAndPushNamed(CoursesOverviewScreen.routeName);
                   },
@@ -91,11 +92,11 @@ class CourseDetailScreen extends StatelessWidget {
               bottom: 20,
               child: IconButton(
                   onPressed: () {
-                    Provider.of<Courses>(context, listen: false)
-                        .updateCourse(courseId, loadedCourse);
-                    Navigator.of(context).popAndPushNamed(
-                        EditCourseScreen.routeName,
-                        arguments: {courseId, loadedCourse});
+                    // Provider.of<Topics>(context, listen: false)
+                    //     .updateTopic(topicId, loadedTopic);
+                    // Navigator.of(context).popAndPushNamed(
+                    //     EditTopicScreen.routeName,
+                    //     arguments: {topicId, loadedTopic});
                   },
                   icon: Icon(
                     Icons.edit,
@@ -105,21 +106,21 @@ class CourseDetailScreen extends StatelessWidget {
       ],
     );
 
-    final bottomAnnouncementText = Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(children: [
-          Center(
-            child: Text(
-              'Ogłoszenia',
-              style: TextStyle(fontSize: 24.0),
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            loadedCourse.announcement,
-            style: TextStyle(fontSize: 14.0),
-          )
-        ]));
+    // final bottomAnnouncementText = Padding(
+    //     padding: EdgeInsets.all(8.0),
+    //     child: Column(children: [
+    //       Center(
+    //         child: Text(
+    //           'Ogłoszenia',
+    //           style: TextStyle(fontSize: 24.0),
+    //         ),
+    //       ),
+    //       SizedBox(height: 20),
+    //       Text(
+    //         loadedTopic.announcement,
+    //         style: TextStyle(fontSize: 14.0),
+    //       )
+    //     ]));
 
     final readButton = Container(
         padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -130,7 +131,7 @@ class CourseDetailScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushNamed(
               TopicsOverviewScreen.routeName,
-              arguments: courseId,
+              arguments: topicId,
             );
           },
           color: Colors.blue[800],
@@ -146,7 +147,7 @@ class CourseDetailScreen extends StatelessWidget {
       padding: EdgeInsets.all(40.0),
       child: Center(
         child: Column(
-          children: <Widget>[bottomAnnouncementText, readButton],
+          children: <Widget>[readButton],
         ),
       ),
     );

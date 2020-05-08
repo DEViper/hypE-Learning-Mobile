@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hype_learning/providers/courses.dart';
+import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/add_course_screen.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:hype_learning/screens/user_profile_screen.dart';
@@ -13,11 +14,13 @@ import 'screens/courses_overview_screen.dart';
 import 'screens/signIn_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/signUp_screen.dart';
+import 'screens/topic_detail_screen.dart';
+import 'screens/topics_overview_screen.dart';
 
 SharedPreferences sharedPrefs;
 
-void main () async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   sharedPrefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
@@ -36,6 +39,14 @@ class MyApp extends StatelessWidget {
               auth.token,
               auth.userId,
               courses == null ? [] : courses.courses,
+            ),
+          ),
+          ChangeNotifierProxyProvider<Auth, Topics>(
+            create: (ctx) => Topics(),
+            update: (context, auth, topics) => topics.update(
+              auth.token,
+              auth.userId,
+              topics == null ? [] : topics.topics,
             ),
           ),
         ],
@@ -72,6 +83,8 @@ class MyApp extends StatelessWidget {
                 AddCourseScreen.routeName: (ctx) => AddCourseScreen(),
                 EditCourseScreen.routeName: (ctx) => EditCourseScreen(),
                 UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
+                TopicDetailScreen.routeName: (ctx) => TopicDetailScreen(),
+                TopicsOverviewScreen.routeName: (ctx) => TopicsOverviewScreen(),
               }),
         ));
   }
