@@ -5,6 +5,7 @@ import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/courses.dart';
+import 'add_topic_screen.dart';
 import 'courses_overview_screen.dart';
 import 'topics_overview_screen.dart';
 
@@ -32,15 +33,15 @@ class CourseDetailScreen extends StatelessWidget {
           width: 90.0,
           child: new Divider(color: Colors.green),
         ),
-         Row(
-          children: [Expanded(
+        Row(children: [
+          Expanded(
             child: AutoSizeText(
               loadedCourse.title,
               style: TextStyle(color: Colors.white, fontSize: 45.0),
               maxLines: 1,
             ),
           ),
-          ]), 
+        ]),
         SizedBox(height: 20.0),
         Text(
           loadedCourse.description,
@@ -142,19 +143,39 @@ class CourseDetailScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold)),
         ));
 
+    final floatingActionButton = Align(
+        alignment: Alignment(0.8, 0.7),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context)
+                .pushReplacementNamed(AddTopicScreen.routeName, arguments: courseId);
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.blue,
+        ));
+
     final bottomContent = Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(40.0),
-      child: Center(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(40.0),
         child: Column(
-          children: <Widget>[bottomAnnouncementText, readButton],
-        ),
-      ),
-    );
+          children: <Widget>[
+            Center(
+              child: Column(
+                children: <Widget>[
+                  bottomAnnouncementText,
+                  readButton,
+                ],
+              ),
+            ),
+          ],
+        ));
 
     return Scaffold(
         body: ListView(
-      children: <Widget>[topContent, bottomContent],
+      children: <Widget>[topContent, bottomContent, floatingActionButton],
     ));
   }
 }

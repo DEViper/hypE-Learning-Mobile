@@ -5,12 +5,14 @@ class Topic with ChangeNotifier {
   final String title;
   final String description;
   final String fileUrl;
+   int courseId;
 
   Topic({
     this.id,
     @required this.title,
     this.description,
     this.fileUrl,
+    this.courseId,
     //this.quizId
   });
 }

@@ -19,7 +19,7 @@ class TopicDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topicId =
+    var topicId =
         ModalRoute.of(context).settings.arguments as int; // is the id!
     final loadedTopic = Provider.of<Topics>(
       context,
@@ -33,15 +33,15 @@ class TopicDetailScreen extends StatelessWidget {
           width: 90.0,
           child: new Divider(color: Colors.green),
         ),
-        Row(
-          children: [Expanded(
+        Row(children: [
+          Expanded(
             child: AutoSizeText(
               loadedTopic.title,
               style: TextStyle(color: Colors.white, fontSize: 45.0),
               maxLines: 1,
             ),
           ),
-          ]),
+        ]),
         SizedBox(height: 30.0),
         Text(
           loadedTopic.description,
@@ -76,11 +76,10 @@ class TopicDetailScreen extends StatelessWidget {
               right: 50,
               bottom: 20,
               child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .popAndPushNamed(CoursesOverviewScreen.routeName);
-                    Provider.of<Topics>(context, listen: false)
+                  onPressed: () async {
+                    await Provider.of<Topics>(context, listen: false)
                         .deleteTopic(topicId);
+                    Navigator.of(context).pop();
                   },
                   icon: Icon(
                     Icons.delete_sweep,
@@ -106,8 +105,6 @@ class TopicDetailScreen extends StatelessWidget {
                   )))
       ],
     );
-
-
 
     return Scaffold(
         body: ListView(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hype_learning/providers/courses.dart';
 import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/add_course_screen.dart';
+import 'package:hype_learning/screens/add_topic_screen.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:hype_learning/screens/user_profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +86,7 @@ class MyApp extends StatelessWidget {
                 UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
                 TopicDetailScreen.routeName: (ctx) => TopicDetailScreen(),
                 TopicsOverviewScreen.routeName: (ctx) => TopicsOverviewScreen(),
+                AddTopicScreen.routeName: (ctx) => AddTopicScreen(),
               }),
         ));
   }

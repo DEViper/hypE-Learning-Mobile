@@ -33,7 +33,7 @@ class Topics with ChangeNotifier {
   Future<void> fetchAndSetStudentTopics() async {
     _topics = new List<Topic>();
     var url = Constants.API_URL + 'users/Topics';
- try {
+    try {
       final response = await http.get(
         url,
         headers: {
@@ -41,7 +41,8 @@ class Topics with ChangeNotifier {
           'Content-Type': 'application/json'
         },
       );
-      final extractedData = json.decode(response.body).toList(); //check if unathorized
+      final extractedData =
+          json.decode(response.body).toList(); //check if unathorized
       if (extractedData == null) {
         return;
       }
@@ -61,7 +62,7 @@ class Topics with ChangeNotifier {
   }
 
   Future<void> fetchAndSetTopics(int courseId) async {
-    var url = Constants.API_URL+'courses/' + courseId.toString() + '/topics';
+    var url = Constants.API_URL + 'courses/' + courseId.toString() + '/topics';
     try {
       final response = await http.get(
         url,
@@ -91,7 +92,7 @@ class Topics with ChangeNotifier {
   }
 
   Future<void> addTopic(Topic topic) async {
-    final url = Constants.API_URL + 'Topics';
+    final url = Constants.API_URL + 'topics';
     try {
       final response = await http.post(
         url,
@@ -102,11 +103,13 @@ class Topics with ChangeNotifier {
         body: json.encode({
           'title': topic.title,
           'description': topic.description,
+          'courseId': topic.courseId,
         }),
       );
       final newTopic = Topic(
         title: topic.title,
         description: topic.description,
+        courseId: topic.courseId,
         id: json.decode(response.body)['id'],
       );
       _topics.add(newTopic);
@@ -121,11 +124,12 @@ class Topics with ChangeNotifier {
   Future<void> updateTopic(int id, Topic newTopic) async {
     final topicIndex = _topics.indexWhere((topic) => topic.id == id);
     if (topicIndex >= 0) {
-       final url = Constants.API_URL + 'Topics/$id';
-      await http.put(url,headers: {
-          'Authorization': 'Bearer ' + this.authToken,
-          'Content-Type': 'application/json'
-        },
+      final url = Constants.API_URL + 'Topics/$id';
+      await http.put(url,
+          headers: {
+            'Authorization': 'Bearer ' + this.authToken,
+            'Content-Type': 'application/json'
+          },
           body: json.encode({
             'title': newTopic.title,
             'description': newTopic.description,
@@ -139,8 +143,7 @@ class Topics with ChangeNotifier {
 
   Future<void> deleteTopic(int id) async {
     final url = Constants.API_URL + 'topics/$id';
-    final existingTopicIndex =
-        _topics.indexWhere((topic) => topic.id == id);
+    final existingTopicIndex = _topics.indexWhere((topic) => topic.id == id);
     var existingTopic = _topics[existingTopicIndex];
     _topics.removeAt(existingTopicIndex);
     notifyListeners();
