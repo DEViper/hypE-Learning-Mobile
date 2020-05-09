@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hype_learning/providers/auth.dart';
 import 'package:hype_learning/screens/signIn_screen.dart';
+import 'package:hype_learning/screens/signIn_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 import '../models/http_exception.dart';
+import 'signIn_screen.dart';
+import 'signIn_screen.dart';
 enum SignUpMode { Signup, Login }
 
 class SignUpScreen extends StatelessWidget {
@@ -189,6 +192,8 @@ class _SignUpCardState extends State<SignUpCard>
     setState(() {
       _isLoading = false;
     });
+Navigator.of(context).popAndPushNamed(
+        SignInScreen.routeName); 
   }
 
   void _switchSignUpMode() {

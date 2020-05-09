@@ -86,7 +86,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
             FlatButton(
               child: Text('Okay'),
               onPressed: () {
-                Navigator.of(ctx).pushNamed(CoursesOverviewScreen.routeName);
+                Navigator.of(ctx).pushNamed(Navigator.defaultRouteName);
               },
             )
           ],
@@ -103,8 +103,8 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context).pushNamed(
-        CoursesOverviewScreen.routeName); // Navigator.of(context).pop();
+      Navigator.of(context)
+                  .popAndPushNamed(Navigator.defaultRouteName);
   }
 
   @override

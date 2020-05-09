@@ -14,7 +14,7 @@ import '../providers/courses.dart';
 
 
 class CoursesOverviewScreen extends StatefulWidget {
-  static const routeName = '/courses';
+  //  static const routeName = '/';
 
   @override
   _CoursesOverviewScreenState createState() => _CoursesOverviewScreenState();

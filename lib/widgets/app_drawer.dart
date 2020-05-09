@@ -45,7 +45,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Kursy'),
             onTap: () {
               Navigator.of(context)
-                  .pushReplacementNamed(CoursesOverviewScreen.routeName);
+                  .pushReplacementNamed(Navigator.defaultRouteName);
             },
           ),
           Divider(),

@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
                   },
                 ),
               ),
-              home: auth.isAuth
+              home:  auth.isAuth
                   ? CoursesOverviewScreen()
                   : FutureBuilder(
                       future: auth.tryAutoLogin(),
@@ -80,15 +80,13 @@ class MyApp extends StatelessWidget {
                 SignInScreen.routeName: (ctx) => SignInScreen(),
                 SignUpScreen.routeName: (ctx) => SignUpScreen(),
                 CourseDetailScreen.routeName: (ctx) => CourseDetailScreen(),
-                CoursesOverviewScreen.routeName: (ctx) =>
-                    CoursesOverviewScreen(),
                 AddCourseScreen.routeName: (ctx) => AddCourseScreen(),
                 EditCourseScreen.routeName: (ctx) => EditCourseScreen(),
                 UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
                 TopicDetailScreen.routeName: (ctx) => TopicDetailScreen(),
                 TopicsOverviewScreen.routeName: (ctx) => TopicsOverviewScreen(),
                 AddTopicScreen.routeName: (ctx) => AddTopicScreen(),
-                EditTopicScreen.routeName:(ctx) => EditTopicScreen(),
+                EditTopicScreen.routeName: (ctx) => EditTopicScreen(),
               }),
         ));
   }

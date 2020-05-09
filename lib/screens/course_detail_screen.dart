@@ -80,7 +80,7 @@ class CourseDetailScreen extends StatelessWidget {
                     Provider.of<Courses>(context, listen: false)
                         .deleteCourse(courseId);
                     Navigator.of(context)
-                        .popAndPushNamed(CoursesOverviewScreen.routeName);
+                        .popAndPushNamed(Navigator.defaultRouteName);
                   },
                   icon: Icon(
                     Icons.delete_sweep,

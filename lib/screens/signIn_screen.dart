@@ -89,12 +89,6 @@ class _SignInCardState extends State<SignInCard>
     'email': '',
     'password': '',
   };
-  Map<String, String> _signUpData = {
-    'email': '',
-    'password': '',
-    'firstName': '',
-    'lastName': '',
-  };
   var _isLoading = false;
   final _passwordController = TextEditingController();
   AnimationController _controller;
@@ -163,21 +157,10 @@ class _SignInCardState extends State<SignInCard>
       _isLoading = true;
     });
     try {
-      if (_authMode == AuthMode.Login) {
-        // Log user in
         await Provider.of<Auth>(context, listen: false).login(
           _signInData['email'],
           _signInData['password'],
         );
-      } else {
-        // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
-          _signUpData['email'],
-          _signUpData['password'],
-          _signUpData['firstName'],
-          _signUpData['lastName'],
-        );
-      }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
@@ -201,6 +184,7 @@ class _SignInCardState extends State<SignInCard>
     setState(() {
       _isLoading = false;
     });
+    Navigator.of(context).pop();
   }
 
   void _switchAuthMode() {
@@ -299,7 +283,8 @@ class _SignInCardState extends State<SignInCard>
                 else
                   RaisedButton(
                     child: Text('LOGIN'),
-                    onPressed: _submit,
+                    onPressed: 
+                     _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

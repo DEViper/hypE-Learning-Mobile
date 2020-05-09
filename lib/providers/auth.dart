@@ -26,6 +26,10 @@ class Auth with ChangeNotifier {
     return token != null;
   }
 
+  set isAuth(bool state){
+    isAuth = state;
+  }
+
   String get token {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
@@ -72,13 +76,14 @@ class Auth with ChangeNotifier {
       _decodedToken = JwtDecoder.tryParseJwt(_token);
 
       var values = _decodedToken.values.toList();
-      var expiresIn = values[2];
+      var expiresIn = values[2] - values[1];
 
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: expiresIn,
         ),
       );
+      
       _autoLogout();
       notifyListeners();
       final prefs = sharedPrefs;

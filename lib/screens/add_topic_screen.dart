@@ -73,7 +73,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
             FlatButton(
               child: Text('Okay'),
                onPressed: () {
-                Navigator.of(ctx).pushNamed(CoursesOverviewScreen.routeName);
+                Navigator.of(ctx).pushNamed(Navigator.defaultRouteName);
               },
             )
           ],
@@ -84,8 +84,8 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context).popAndPushNamed(
-        CoursesOverviewScreen.routeName); // Navigator.of(context).pop();
+      Navigator.of(context)
+                  .popAndPushNamed(Navigator.defaultRouteName);
   }
 
 

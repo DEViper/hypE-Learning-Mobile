@@ -100,7 +100,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           child: InkWell(
             onTap: () {
               Navigator.of(context)
-                  .popAndPushNamed(CoursesOverviewScreen.routeName);
+                  .popAndPushNamed(Navigator.defaultRouteName);
             },
             child: Icon(Icons.arrow_back, color: Colors.white),
           ),

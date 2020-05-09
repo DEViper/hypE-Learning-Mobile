@@ -102,7 +102,7 @@ class _EditTopicScreenState extends State<EditTopicScreen> {
       _isLoading = false;
     });
       Navigator.of(context).popAndPushNamed(
-        CoursesOverviewScreen.routeName); // Navigator.of(context).pop();
+        Navigator.defaultRouteName); // Navigator.of(context).pop();
   }
 
   @override
