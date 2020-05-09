@@ -104,7 +104,7 @@ class TopicDetailScreen extends StatelessWidget {
               child: IconButton(
                   onPressed: () {
                     Provider.of<Topics>(context, listen: false)
-                        .updateTopic(topicId, loadedTopic);
+                        .updateTopic(topicId, loadedTopic, loadedTopic.fileUrl);
                     Navigator.of(context).popAndPushNamed(
                         EditTopicScreen.routeName,
                         arguments: {topicId, loadedTopic});

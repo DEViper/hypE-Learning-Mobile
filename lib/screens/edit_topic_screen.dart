@@ -1,4 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/topic.dart';
@@ -73,7 +75,7 @@ class _EditTopicScreenState extends State<EditTopicScreen> {
 
     try {
       await Provider.of<Topics>(context, listen: false)
-          .updateTopic(_editedTopic.id, _editedTopic);
+          .updateTopic(_editedTopic.id, _editedTopic, _fileName);
     } catch (error) {
       await showDialog(
         context: context,
@@ -102,7 +104,33 @@ class _EditTopicScreenState extends State<EditTopicScreen> {
       _isLoading = false;
     });
       Navigator.of(context).popAndPushNamed(
-        Navigator.defaultRouteName); // Navigator.of(context).pop();
+        Navigator.defaultRouteName); // Navigator.of(context).pop()
+        
+  }
+   bool _loadingPath = false;
+  String _path;
+  Map<String, String> _paths;
+  FileType _pickingType = FileType.any;
+  String _extension;
+  String _fileName;
+
+  void _openFileExplorer() async {
+    setState(() => _loadingPath = true);
+    try {
+      _paths = null;
+      _path = await FilePicker.getFilePath(
+          type: _pickingType,
+          allowedExtensions: (_extension?.isNotEmpty ?? false)
+              ? _extension?.replaceAll(' ', '')?.split(',')
+              : null);
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    if (!mounted) return;
+    setState(() {
+      _loadingPath = false;
+      _fileName = _path;
+    });
   }
 
   @override
@@ -173,6 +201,10 @@ class _EditTopicScreenState extends State<EditTopicScreen> {
                           id: _editedTopic.id,
                         );
                       },
+                    ),
+                       RaisedButton(
+                      onPressed: () => _openFileExplorer(),
+                      child: new Text("Open file picker"),
                     ),
                   ],
                 ),

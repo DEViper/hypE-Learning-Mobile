@@ -125,25 +125,40 @@ class Topics with ChangeNotifier {
     }
   }
 
-  Future<void> updateTopic(int id, Topic newTopic) async {
+  Future<void> updateTopic(int id, Topic topic, String fileUrl) async {
     final topicIndex = _topics.indexWhere((topic) => topic.id == id);
     if (topicIndex >= 0) {
       final url = Constants.API_URL + 'topics/$id';
-      await http.put(url,
-          headers: {
-            'Authorization': 'Bearer ' + this.authToken,
-            'Content-Type': 'application/json'
-          },
-          body: json.encode({
-            'title': newTopic.title,
-            'description': newTopic.description,
-          }));
-      _topics[topicIndex] = newTopic;
+    try {
+     
+      var request = http.MultipartRequest("PUT", Uri.parse(url));
+      request.headers.addAll({
+        'Authorization': 'Bearer ' + this.authToken,
+      });
+
+      request.fields['title'] = topic.title;
+      request.fields['description'] = topic.description;
+      request.fields['courseId'] = topic.courseId.toString();
+      request.files.add(await http.MultipartFile.fromPath('file', fileUrl,
+          contentType: MediaType('application', 'pdf')));
+      var response = await  http.Response.fromStream(await request.send());
+     
+      
+
+      final editedTopic = Topic(title: topic.title,
+        description: topic.description,
+        courseId: topic.courseId,
+        id: json.decode(response.body)['id'],
+        fileUrl: json.decode(response.body)['fileUrl'],);
+        _topics[topicIndex]=editedTopic;
       notifyListeners();
-    } else {
-      print('...');
+    } catch (error) {
+      print(error);
+      throw error;
     }
   }
+  }
+
 
   Future<void> deleteTopic(int id) async {
     final url = Constants.API_URL + 'topics/$id';
