@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:hype_learning/config/constants.dart';
 import '../config/constants.dart';
 import '../models/http_exception.dart';
@@ -91,29 +93,31 @@ class Topics with ChangeNotifier {
     }
   }
 
-  Future<void> addTopic(Topic topic) async {
+  Future<void> addTopic(Topic topic, String fileUrl) async {
     final url = Constants.API_URL + 'topics';
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Authorization': 'Bearer ' + this.authToken,
-          'Content-Type': 'application/json'
-        },
-        body: json.encode({
-          'title': topic.title,
-          'description': topic.description,
-          'courseId': topic.courseId,
-        }),
-      );
+     
+      var request = http.MultipartRequest("POST", Uri.parse(url));
+      request.headers.addAll({
+        'Authorization': 'Bearer ' + this.authToken,
+      });
+
+      request.fields['title'] = topic.title;
+      request.fields['description'] = topic.description;
+      request.fields['courseId'] = topic.courseId.toString();
+      request.files.add(await http.MultipartFile.fromPath('file', fileUrl,
+          contentType: MediaType('application', 'pdf')));
+      var response = await  http.Response.fromStream(await request.send());
+     
+
       final newTopic = Topic(
         title: topic.title,
         description: topic.description,
         courseId: topic.courseId,
         id: json.decode(response.body)['id'],
+        fileUrl: json.decode(response.body)['fileUrl'],
       );
       _topics.add(newTopic);
-      // _Topics.insert(0, newTopic); // at the start of the list
       notifyListeners();
     } catch (error) {
       print(error);

@@ -1,4 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hype_learning/screens/courses_overview_screen.dart';
 import 'package:hype_learning/screens/topics_overview_screen.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +22,11 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
 
   final _form = GlobalKey<FormState>();
   var _editedTopic =
-      Topic(id: null, title: '', description: '', courseId: null);
+      Topic(id: null, title: '', description: '', courseId: null, fileUrl: '');
   var _initValues = {
     'title': '',
     'description': '',
+    'fileUrl': '',
     'courseId': '',
   };
   var _isInit = true;
@@ -62,7 +65,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
     });
 
     try {
-      await Provider.of<Topics>(context, listen: false).addTopic(_editedTopic);
+      await Provider.of<Topics>(context, listen: false).addTopic(_editedTopic, _fileName);
     } catch (error) {
       await showDialog(
         context: context,
@@ -72,7 +75,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
           actions: <Widget>[
             FlatButton(
               child: Text('Okay'),
-               onPressed: () {
+              onPressed: () {
                 Navigator.of(ctx).pushNamed(Navigator.defaultRouteName);
               },
             )
@@ -84,13 +87,34 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
     setState(() {
       _isLoading = false;
     });
-      Navigator.of(context)
-                  .popAndPushNamed(Navigator.defaultRouteName);
+    Navigator.of(context).popAndPushNamed(Navigator.defaultRouteName);
   }
 
+  bool _loadingPath = false;
+  String _path;
+  Map<String, String> _paths;
+  FileType _pickingType = FileType.any;
+  String _extension;
+  String _fileName;
 
-
-
+  void _openFileExplorer() async {
+    setState(() => _loadingPath = true);
+    try {
+      _paths = null;
+      _path = await FilePicker.getFilePath(
+          type: _pickingType,
+          allowedExtensions: (_extension?.isNotEmpty ?? false)
+              ? _extension?.replaceAll(' ', '')?.split(',')
+              : null);
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    if (!mounted) return;
+    setState(() {
+      _loadingPath = false;
+      _fileName = _path;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +157,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
                           courseId: _editedTopic.courseId,
                           title: value,
                           description: _editedTopic.description,
+                          fileUrl: _editedTopic.fileUrl,
                           id: _editedTopic.id,
                         );
                       },
@@ -156,9 +181,14 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
                           courseId: _editedTopic.courseId,
                           title: _editedTopic.title,
                           description: value,
+                          fileUrl: _editedTopic.fileUrl,
                           id: _editedTopic.id,
                         );
                       },
+                    ),
+                    RaisedButton(
+                      onPressed: () => _openFileExplorer(),
+                      child: new Text("Open file picker"),
                     ),
                   ],
                 ),
