@@ -4,6 +4,7 @@ import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
 import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/courses.dart';
 import 'courses_overview_screen.dart';
@@ -50,6 +51,15 @@ class TopicDetailScreen extends StatelessWidget {
         )
       ],
     );
+
+    _launchURL() async {
+      final url = loadedTopic.fileUrl;
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
 
     final topContent = Stack(
       children: <Widget>[
@@ -103,7 +113,17 @@ class TopicDetailScreen extends StatelessWidget {
                     Icons.edit,
                     color: Colors.white,
                     size: 40,
-                  )))
+                  ))),
+        Positioned(
+            left: 20,
+            bottom: 20,
+            child: IconButton(
+                onPressed: _launchURL,
+                icon: Icon(
+                  Icons.book,
+                  color: Colors.white,
+                  size: 40,
+                )))
       ],
     );
 
