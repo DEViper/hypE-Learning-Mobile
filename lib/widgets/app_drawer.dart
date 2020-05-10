@@ -6,6 +6,7 @@ import 'package:hype_learning/screens/signIn_screen.dart';
 import 'package:provider/provider.dart';
 import '../helpers/shared_preferences_decoder.dart';
 import '../screens/courses_overview_screen.dart';
+import '../screens/admin_overview_screen.dart';
 import '../screens/user_profile_screen.dart';
 import '../providers/auth.dart';
 import '../helpers/custom_route.dart';
@@ -23,7 +24,7 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.shop),
+            leading: Icon(Icons.account_circle),
             title: Text('Profil'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(UserProfileScreen.routeName);
@@ -48,6 +49,17 @@ class AppDrawer extends StatelessWidget {
                   .pushReplacementNamed(Navigator.defaultRouteName);
             },
           ),
+
+               Divider(),
+          if ( role == 'admin')
+            ListTile(
+              leading: Icon(Icons.lock),
+              title: Text("Panel"),
+              onTap: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(AdminOverviewScreen.routeName);
+              },
+            ),
           Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),

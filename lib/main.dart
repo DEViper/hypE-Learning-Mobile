@@ -20,6 +20,8 @@ import 'screens/signUp_screen.dart';
 import 'screens/topic_detail_screen.dart';
 import 'screens/topics_overview_screen.dart';
 import 'screens/edit_profile_screen.dart';
+import 'screens/admin_overview_screen.dart';
+import 'screens/user_detail_screen.dart';
 
 SharedPreferences sharedPrefs;
 
@@ -98,6 +100,8 @@ class MyApp extends StatelessWidget {
                 AddTopicScreen.routeName: (ctx) => AddTopicScreen(),
                 EditTopicScreen.routeName: (ctx) => EditTopicScreen(),
                 EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+                AdminOverviewScreen.routeName: (ctx) => AdminOverviewScreen(),
+                UserDetailScreen.routeName: (ctx) => UserDetailScreen(),
               }),
         ));
   }
