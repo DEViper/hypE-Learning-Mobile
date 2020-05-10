@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
+import 'providers/profiles.dart';
 import 'screens/course_detail_screen.dart';
 import 'screens/courses_overview_screen.dart';
 import 'screens/edit_topic_screen.dart';
@@ -18,6 +19,7 @@ import 'screens/splash_screen.dart';
 import 'screens/signUp_screen.dart';
 import 'screens/topic_detail_screen.dart';
 import 'screens/topics_overview_screen.dart';
+import 'screens/edit_profile_screen.dart';
 
 SharedPreferences sharedPrefs;
 
@@ -51,6 +53,14 @@ class MyApp extends StatelessWidget {
               topics == null ? [] : topics.topics,
             ),
           ),
+          ChangeNotifierProxyProvider<Auth, Profiles>(
+            create: (ctx) => Profiles(),
+            update: (context, auth, profile) => profile.update(
+              auth.token,
+              auth.userId,
+              profile == null ? null : profile.profile,
+            ),
+          ),
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -66,7 +76,7 @@ class MyApp extends StatelessWidget {
                   },
                 ),
               ),
-              home:  auth.isAuth
+              home: auth.isAuth
                   ? CoursesOverviewScreen()
                   : FutureBuilder(
                       future: auth.tryAutoLogin(),
@@ -87,6 +97,7 @@ class MyApp extends StatelessWidget {
                 TopicsOverviewScreen.routeName: (ctx) => TopicsOverviewScreen(),
                 AddTopicScreen.routeName: (ctx) => AddTopicScreen(),
                 EditTopicScreen.routeName: (ctx) => EditTopicScreen(),
+                EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
               }),
         ));
   }

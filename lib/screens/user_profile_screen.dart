@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
 import 'package:hype_learning/providers/course.dart';
 import 'package:hype_learning/providers/courses.dart';
+import 'package:hype_learning/providers/profiles.dart';
+import 'package:hype_learning/screens/edit_profile_screen.dart';
 import 'package:hype_learning/widgets/courses_list.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +37,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _isInit = false;
     super.didChangeDependencies();
   }
-
+  final id = SharedPreferencesDecoder.getField('userId');
   final image = SharedPreferencesDecoder.getField('fileUrl');
 
   final firstName = SharedPreferencesDecoder.getField('firstName');
@@ -99,8 +101,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           top: 60.0,
           child: InkWell(
             onTap: () {
-              Navigator.of(context)
-                  .popAndPushNamed(Navigator.defaultRouteName);
+              Navigator.of(context).popAndPushNamed(Navigator.defaultRouteName);
             },
             child: Icon(Icons.arrow_back, color: Colors.white),
           ),
@@ -109,7 +110,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             right: 8,
             top: 50.0,
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
+                },
                 icon: Icon(
                   Icons.edit,
                   color: Colors.white,
@@ -117,7 +120,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 )))
       ],
     );
-
+         
     ListTile makeListTile(Course course) => ListTile(
           contentPadding:
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
