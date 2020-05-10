@@ -123,6 +123,40 @@ class Profiles with ChangeNotifier {
       }
     }
   }
+
+
+ Future<void> changeRole(int id, Profile profile, String role) async {
+    final url = Constants.API_URL + 'users/management/$role/$id';
+
+    final profileIndex = _profiles.indexWhere((profile) => profile.id == id);
+    if (profileIndex >= 0) {
+      try {
+        var request = http.MultipartRequest("PUT", Uri.parse(url));
+        request.headers.addAll({
+          'Authorization': 'Bearer ' + this.authToken,
+        });
+
+        var response = await http.Response.fromStream(await request.send());
+
+        final editedProfile = Profile(
+          id: profile.id,
+          email: profile.email,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          role:  json.decode(response.body)['role'],
+          isBlocked: profile.isBlocked,
+         
+        );
+        _profiles[profileIndex] = editedProfile;
+
+        notifyListeners();
+      } catch (error) {
+        print(error);
+        throw error;
+      }
+    }
+  }
+
 }
 
 
