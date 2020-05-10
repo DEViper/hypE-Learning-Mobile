@@ -74,6 +74,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       await Provider.of<Profiles>(context, listen: false)
           .updateProfile(_editedProfile.id, _editedProfile, _fileName);
+          Navigator.of(context).pop();
           await Provider.of<Auth>(context, listen: false).logout();
     } catch (error) {
       await showDialog(

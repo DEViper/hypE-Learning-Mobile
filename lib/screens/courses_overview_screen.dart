@@ -27,9 +27,9 @@ class _CoursesOverviewScreenState extends State<CoursesOverviewScreen> {
   @override
   void initState() {
     // Provider.of<Courses>(context).fetchAndSetProducts(); // WON'T WORK!
-    // Future.delayed(Duration.zero).then((_) {
-    //   Provider.of<Products>(context).fetchAndSetProducts();
-    // });
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<Courses>(context).fetchAndSetCourses();
+    });
     super.initState();
   }
 
