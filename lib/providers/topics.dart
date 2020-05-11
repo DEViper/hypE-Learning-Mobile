@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:hype_learning/config/constants.dart';
+import 'package:hype_learning/providers/profile.dart';
+import 'package:hype_learning/providers/solution.dart';
 import '../config/constants.dart';
 import '../models/http_exception.dart';
 import './topic.dart';
 
 class Topics with ChangeNotifier {
   List<Topic> _topics = [];
+  List<Solution> _solutions = [];
   String authToken;
   int userId;
 
@@ -19,6 +22,10 @@ class Topics with ChangeNotifier {
 
   List<Topic> get topics {
     return [..._topics];
+  }
+
+  List<Solution> get solutions {
+    return [..._solutions];
   }
 
   Topics update(authToken, userId, _topics) {
@@ -80,11 +87,11 @@ class Topics with ChangeNotifier {
       final List<Topic> loadedTopics = [];
       extractedData.forEach((topicData) {
         loadedTopics.add(Topic(
-          id: topicData['id'],
-          title: topicData['title'],
-          description: topicData['description'],
-          fileUrl: topicData['fileUrl'],
-        ));
+            id: topicData['id'],
+            title: topicData['title'],
+            description: topicData['description'],
+            fileUrl: topicData['fileUrl'],
+            solutions: topicData['solutions']));
       });
       _topics = loadedTopics;
       notifyListeners();
@@ -186,11 +193,10 @@ class Topics with ChangeNotifier {
           'Authorization': 'Bearer ' + this.authToken,
         });
 
-    
         request.files.add(await http.MultipartFile.fromPath('file', fileUrl,
             contentType: MediaType('application', 'pdf')));
         var response = await http.Response.fromStream(await request.send());
-       
+
         notifyListeners();
       } catch (error) {
         print(error);
@@ -199,7 +205,37 @@ class Topics with ChangeNotifier {
     }
   }
 
+  Future<void> fetchAndSetSolutions(int id) async {
+    var url = Constants.API_URL + 'topics/$id';
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+      );
+      final extractedData = json.decode(response.body).toList();
+      if (extractedData == null) {
+        return;
+      }
 
+      final List<Solution> loadedSolutions = [];
+      extractedData.forEach((solution) {
+        loadedSolutions.add(Solution(
+          id: solution['id'],
+          fileUrl: solution['fileUrl'],
+          solver: Profile(
+              id: solution['solvers'][0]['id'],
+              firstName: solution['solvers'][0]['firstName'],
+              lastName: solution['solvers'][0]['lastName']),
+        ));
+      });
 
-
+      _solutions = loadedSolutions;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
 }

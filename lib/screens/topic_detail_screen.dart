@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
+import 'package:hype_learning/providers/solution.dart';
 import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:provider/provider.dart';
@@ -12,13 +13,50 @@ import 'courses_overview_screen.dart';
 import 'edit_topic_screen.dart';
 import 'topics_overview_screen.dart';
 
-class TopicDetailScreen extends StatelessWidget {
+class TopicDetailScreen extends StatefulWidget {
   // final String title;
   // final double price;
 
   // ProductDetailScreen(this.title, this.price);
   static const routeName = '/topic-detail';
+
+  @override
+  _TopicDetailScreenState createState() => _TopicDetailScreenState();
+}
+
+class _TopicDetailScreenState extends State<TopicDetailScreen> {
   final role = SharedPreferencesDecoder.getField("role");
+  var _isInit = true;
+  var _isLoading = false;
+  
+  @override
+  void initState() {
+    // Provider.of<Courses>(context).fetchAndSetProducts(); // WON'T WORK!
+    //       final topicId = ModalRoute.of(context).settings.arguments;
+
+    // Future.delayed(Duration.zero).then((_) {
+    //   Provider.of<Topics>(context, listen: false).fetchAndSetSolutions(topicId);
+    // });
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final topicId = ModalRoute.of(context).settings.arguments;
+      Provider.of<Topics>(context).fetchAndSetSolutions(topicId).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +67,8 @@ class TopicDetailScreen extends StatelessWidget {
       listen: false,
     ).findById(topicId);
 
+    final solutionsData = Provider.of<Topics>(context);
+    final solutions = solutionsData.solutions;
     final topContentText = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -55,6 +95,15 @@ class TopicDetailScreen extends StatelessWidget {
 
     _launchURL() async {
       final url = loadedTopic.fileUrl;
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+
+      _launchSolution(String fileUrl) async {
+      final url = fileUrl;
       if (await canLaunch(url)) {
         await launch(url);
       } else {
@@ -141,6 +190,52 @@ class TopicDetailScreen extends StatelessWidget {
       backgroundColor: Colors.blue,
     );
 
+
+
+
+    ListTile makeListTile(Solution solution) => ListTile(
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          title: Text(
+            solution.solver.firstName + solution.solver.lastName, 
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          trailing:
+              Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
+          onTap: () {
+          _launchSolution(solution.fileUrl);
+          },
+        );
+
+    Card makeCard(Solution solution) => Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(100.0))),
+          elevation: 8.0,
+          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: new BorderRadius.all(new Radius.circular(100.0)),
+            ),
+            child: makeListTile(solution),
+          ),
+        );
+
+    final makeBody = Container(
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: solutions != null ? solutions.length : 0 ,
+        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+          value: solutions[i],
+          child: makeCard(solutions[i]),
+        ),
+      ),
+    );
+
+
+
+
     final bottomContent = Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(30.0),
@@ -151,6 +246,8 @@ class TopicDetailScreen extends StatelessWidget {
                 children: <Widget>[
                     if (role == 'student')
                   addSolutionButton,
+                     if (role == 'instructor' || role == 'admin')
+                    makeBody,
                 ],
               ),
             ),
