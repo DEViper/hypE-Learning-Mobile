@@ -115,7 +115,7 @@ class TopicDetailScreen extends StatelessWidget {
                     size: 40,
                   ))),
         Positioned(
-            left: 20,
+            left: 190,
             bottom: 20,
             child: IconButton(
                 onPressed: _launchURL,

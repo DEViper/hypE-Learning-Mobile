@@ -177,7 +177,7 @@ class CourseDetailScreen extends StatelessWidget {
     );
 
     final candidatesButton = Align(
-        alignment: Alignment(0.1, 0.3),
+        alignment: Alignment(0.0, 0.0),
         child: Column(
           children: <Widget>[
             RaisedButton(
