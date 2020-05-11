@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'helpers/custom_route.dart';
 import 'providers/auth.dart';
 import 'providers/profiles.dart';
+import 'screens/candidates_overview_screen.dart';
 import 'screens/course_detail_screen.dart';
 import 'screens/courses_overview_screen.dart';
 import 'screens/edit_topic_screen.dart';
@@ -22,6 +23,7 @@ import 'screens/topics_overview_screen.dart';
 import 'screens/edit_profile_screen.dart';
 import 'screens/admin_overview_screen.dart';
 import 'screens/user_detail_screen.dart';
+import 'screens/participants_overview_screen.dart';
 
 SharedPreferences sharedPrefs;
 
@@ -102,6 +104,10 @@ class MyApp extends StatelessWidget {
                 EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
                 AdminOverviewScreen.routeName: (ctx) => AdminOverviewScreen(),
                 UserDetailScreen.routeName: (ctx) => UserDetailScreen(),
+                ParticipantsOverviewScreen.routeName: (ctx) =>
+                    ParticipantsOverviewScreen(),
+                CandidatesOverviewScreen.routeName: (ctx) =>
+                    CandidatesOverviewScreen(),
               }),
         ));
   }

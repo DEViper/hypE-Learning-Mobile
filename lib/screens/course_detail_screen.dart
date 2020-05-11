@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../providers/courses.dart';
 import 'add_topic_screen.dart';
+import 'candidates_overview_screen.dart';
 import 'courses_overview_screen.dart';
 import 'topics_overview_screen.dart';
+import 'participants_overview_screen.dart';
 
 class CourseDetailScreen extends StatelessWidget {
   // final String title;
@@ -144,11 +146,11 @@ class CourseDetailScreen extends StatelessWidget {
         ));
 
     final floatingActionButton = Align(
-        alignment: Alignment(0.8, 0.7),
+        alignment: Alignment(0.8, 0.3),
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context)
-                .pushReplacementNamed(AddTopicScreen.routeName, arguments: courseId);
+            Navigator.of(context).pushReplacementNamed(AddTopicScreen.routeName,
+                arguments: courseId);
           },
           child: Icon(
             Icons.add,
@@ -157,9 +159,50 @@ class CourseDetailScreen extends StatelessWidget {
           backgroundColor: Colors.blue,
         ));
 
+    final participantsButton = RaisedButton(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      onPressed: () {
+        Navigator.of(context).pushNamed(
+          ParticipantsOverviewScreen.routeName,
+          arguments: courseId,
+        );
+      },
+      color: Colors.blue[800],
+      child: Text("Uczestnicy",
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold)),
+    );
+
+    final candidatesButton = Align(
+        alignment: Alignment(0.1, 0.3),
+        child: Column(
+          children: <Widget>[
+            RaisedButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  CandidatesOverviewScreen.routeName,
+                  arguments: courseId,
+                );
+              },
+              color: Colors.blue[800],
+              child: Text("Kandydaci",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold)),
+            ),
+            participantsButton
+          ],
+        ));
+
     final bottomContent = Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(40.0),
+        padding: EdgeInsets.all(30.0),
         child: Column(
           children: <Widget>[
             Center(
@@ -175,7 +218,12 @@ class CourseDetailScreen extends StatelessWidget {
 
     return Scaffold(
         body: ListView(
-      children: <Widget>[topContent, bottomContent, floatingActionButton],
+      children: <Widget>[
+        topContent,
+        bottomContent, 
+        candidatesButton,
+        floatingActionButton
+      ],
     ));
   }
 }

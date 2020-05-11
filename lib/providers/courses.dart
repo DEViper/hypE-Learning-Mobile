@@ -4,12 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:hype_learning/config/constants.dart';
+import 'package:hype_learning/providers/profile.dart';
 import '../config/constants.dart';
 import '../models/http_exception.dart';
 import './course.dart';
 
 class Courses with ChangeNotifier {
   List<Course> _courses = [];
+  List<Profile> _participants = [];
+   List<Profile> _candidates =[];
   String authToken;
   int userId;
 
@@ -17,6 +20,14 @@ class Courses with ChangeNotifier {
 
   List<Course> get courses {
     return [..._courses];
+  }
+
+    List<Profile> get participants {
+    return [..._participants];
+  }
+  
+    List<Profile> get candidates {
+    return [..._candidates];
   }
 
   Courses update(authToken, userId, _courses) {
@@ -162,4 +173,121 @@ class Courses with ChangeNotifier {
     }
     existingCourse = null;
   }
+
+
+ Future<void> fetchAndSetParticipants(int id) async {
+    var url = Constants.API_URL + 'courses/$id';
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+      );
+      final extractedData = json.decode(response.body)['participants'].toList();
+      if (extractedData == null) {
+        return;
+      }
+      final List<Profile> loadedParticipants = [];
+      extractedData.forEach((profileData) {
+        loadedParticipants.add(Profile(
+          id: profileData['id'],
+          firstName: profileData['firstName'],
+          lastName: profileData['lastName'],
+
+        ));
+      });
+     _participants = loadedParticipants;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+
+
+ Future<void> deleteParticipant(int id, int participantId) async {
+    final url = Constants.API_URL + 'courses/$id/students/$participantId';
+    final existingCourseIndex =
+        _courses.indexWhere((course) => course.id == id);
+    var existingCourse = _courses[existingCourseIndex];
+    _courses.removeAt(existingCourseIndex);
+    notifyListeners();
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + this.authToken,
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode >= 400) {
+      _courses.insert(existingCourseIndex, existingCourse);
+      notifyListeners();
+      throw HttpException('Nie można usunąć uczestnika.');
+    }
+    existingCourse = null;
+  }
+
+
+
+
+ Future<void> fetchAndSetCandidates(int id) async {
+    var url = Constants.API_URL + 'courses/$id/candidates';
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+      );
+      final extractedData = json.decode(response.body).toList();
+      if (extractedData == null) {
+        return;
+      }
+      final List<Profile> loadedCandidates = [];
+      extractedData.forEach((profileData) {
+        loadedCandidates.add(Profile(
+          id: profileData['id'],
+          firstName: profileData['firstName'],
+          lastName: profileData['lastName'],
+
+        ));
+      });
+     _candidates = loadedCandidates;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+
+  Future<void> addCandidate(int id, int participantId) async {
+    final url = Constants.API_URL + 'courses/$id/students/$participantId';
+    final existingCourseIndex =
+        _courses.indexWhere((course) => course.id == id);
+    var existingCourse = _courses[existingCourseIndex];
+    _courses.removeAt(existingCourseIndex);
+    notifyListeners();
+    final response = await http.put(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + this.authToken,
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode >= 400) {
+      _courses.insert(existingCourseIndex, existingCourse);
+      notifyListeners();
+      throw HttpException('Nie można usunąć uczestnika.');
+    }
+    existingCourse = null;
+  }
+
+
+
+
+
+
 }
