@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/courses.dart';
+import 'add_solution_screen.dart';
 import 'courses_overview_screen.dart';
 import 'edit_topic_screen.dart';
 import 'topics_overview_screen.dart';
@@ -127,9 +128,38 @@ class TopicDetailScreen extends StatelessWidget {
       ],
     );
 
+
+    final addSolutionButton = FloatingActionButton(
+      onPressed: () {
+        Navigator.of(context).pushReplacementNamed(AddSolutionScreen.routeName,
+            arguments: ModalRoute.of(context).settings.arguments);
+      },
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.blue,
+    );
+
+    final bottomContent = Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(30.0),
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: Column(
+                children: <Widget>[
+                    if (role == 'student')
+                  addSolutionButton,
+                ],
+              ),
+            ),
+          ],
+        ));
+
     return Scaffold(
         body: ListView(
-      children: <Widget>[topContent],
+      children: <Widget>[topContent, bottomContent],
     ));
   }
 }

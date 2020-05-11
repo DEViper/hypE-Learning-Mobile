@@ -24,6 +24,7 @@ import 'screens/edit_profile_screen.dart';
 import 'screens/admin_overview_screen.dart';
 import 'screens/user_detail_screen.dart';
 import 'screens/participants_overview_screen.dart';
+import 'screens/add_solution_screen.dart';
 
 SharedPreferences sharedPrefs;
 
@@ -108,6 +109,8 @@ class MyApp extends StatelessWidget {
                     ParticipantsOverviewScreen(),
                 CandidatesOverviewScreen.routeName: (ctx) =>
                     CandidatesOverviewScreen(),
+                    AddSolutionScreen.routeName: (ctx) =>
+                    AddSolutionScreen(),
               }),
         ));
   }
