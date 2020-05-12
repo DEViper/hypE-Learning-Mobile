@@ -28,6 +28,7 @@ class _AddTopicScreenState extends State<AddTopicScreen> {
     'description': '',
     'fileUrl': '',
     'courseId': '',
+
   };
   var _isInit = true;
   var _isLoading = false;

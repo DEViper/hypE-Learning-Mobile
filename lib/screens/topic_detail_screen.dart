@@ -12,6 +12,7 @@ import 'add_solution_screen.dart';
 import 'courses_overview_screen.dart';
 import 'edit_topic_screen.dart';
 import 'topics_overview_screen.dart';
+import 'add_quiz_screen.dart';
 
 class TopicDetailScreen extends StatefulWidget {
   // final String title;
@@ -111,6 +112,27 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       }
     }
 
+  final addQuizButton = Container(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          onPressed: () {
+            Navigator.of(context).pushNamed(
+              AddQuizScreen.routeName,
+              arguments: {topicId}
+            );
+          },
+          color: Colors.blue[800],
+          child: Text("Dodaj quiz",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold)),
+        ));
+
+
     final topContent = Stack(
       children: <Widget>[
         Container(
@@ -173,9 +195,21 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   Icons.book,
                   color: Colors.white,
                   size: 40,
+                ))),
+                     Positioned(
+            left: 190,
+            bottom: 100,
+            child: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.extension,
+                  color: Colors.white,
+                  size: 40,
                 )))
       ],
     );
+
+
 
 
     final addSolutionButton = FloatingActionButton(
@@ -244,6 +278,8 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
             Center(
               child: Column(
                 children: <Widget>[
+                if (role == 'instructor' || role == 'admin')
+                  addQuizButton,
                     if (role == 'student')
                   addSolutionButton,
                      if (role == 'instructor' || role == 'admin')

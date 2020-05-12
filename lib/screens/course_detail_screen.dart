@@ -138,7 +138,7 @@ class CourseDetailScreen extends StatelessWidget {
             );
           },
           color: Colors.blue[800],
-          child: Text("Topics",
+          child: Text("Tematy",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 18.0,

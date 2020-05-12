@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hype_learning/providers/courses.dart';
+import 'package:hype_learning/providers/quizzes.dart';
 import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/add_course_screen.dart';
+import 'package:hype_learning/screens/add_quiz_screen.dart';
 import 'package:hype_learning/screens/add_topic_screen.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
 import 'package:hype_learning/screens/user_profile_screen.dart';
@@ -66,6 +68,14 @@ class MyApp extends StatelessWidget {
               profile == null ? null : profile.profile,
             ),
           ),
+          ChangeNotifierProxyProvider<Auth, Quizzes>(
+            create: (ctx) => Quizzes(),
+            update: (context, auth, quizzes) => quizzes.update(
+              auth.token,
+              auth.userId,
+              quizzes == null ? [] : quizzes.quizzes,
+            ),
+          ),
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -109,8 +119,8 @@ class MyApp extends StatelessWidget {
                     ParticipantsOverviewScreen(),
                 CandidatesOverviewScreen.routeName: (ctx) =>
                     CandidatesOverviewScreen(),
-                    AddSolutionScreen.routeName: (ctx) =>
-                    AddSolutionScreen(),
+                AddSolutionScreen.routeName: (ctx) => AddSolutionScreen(),
+                AddQuizScreen.routeName: (ctx) => AddQuizScreen(),
               }),
         ));
   }

@@ -9,6 +9,7 @@ class Topic with ChangeNotifier {
   final String fileUrl;
   final List<Solution> solutions;
    int courseId;
+   int quizId;
 
   Topic({
     this.id,
@@ -17,6 +18,6 @@ class Topic with ChangeNotifier {
     this.fileUrl,
     this.courseId,
     this.solutions,
-    //this.quizId
+    this.quizId
   });
 }
