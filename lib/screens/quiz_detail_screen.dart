@@ -15,6 +15,7 @@ import 'courses_overview_screen.dart';
 import 'edit_topic_screen.dart';
 import 'topics_overview_screen.dart';
 import 'add_quiz_screen.dart';
+import 'edit_quiz_screen.dart';
 
 class QuizDetailScreen extends StatefulWidget {
   // final String title;
@@ -125,23 +126,23 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                     color: Colors.white,
                     size: 40,
                   ))),
-        // if (role == 'instructor' || role == 'admin')
-        //   Positioned(
-        //       left: 50,
-        //       bottom: 20,
-        //       child: IconButton(
-        //           onPressed: () {
-        //             Provider.of<Topics>(context, listen: false)
-        //                 .updateTopic(topicId, loadedTopic, loadedTopic.fileUrl);
-        //             Navigator.of(context).popAndPushNamed(
-        //                 EditTopicScreen.routeName,
-        //                 arguments: {topicId, loadedTopic});
-        //           },
-        //           icon: Icon(
-        //             Icons.edit,
-        //             color: Colors.white,
-        //             size: 40,
-        //           ))),
+        if ((role == 'instructor' || role == 'admin') && loadedQuiz.id != null)
+          Positioned(
+              left: 50,
+              bottom: 20,
+              child: IconButton(
+                  onPressed: () {
+                    Provider.of<Quizzes>(context, listen: false)
+                        .updateQuiz(loadedQuiz.id, loadedQuiz);
+                    Navigator.of(context).popAndPushNamed(
+                        EditQuizScreen.routeName,
+                        arguments: {loadedQuiz.id, loadedQuiz});
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                    size: 40,
+                  ))),
         //     Positioned(
         //         left: 190,
         //         bottom: 20,

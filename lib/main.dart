@@ -28,6 +28,7 @@ import 'screens/admin_overview_screen.dart';
 import 'screens/user_detail_screen.dart';
 import 'screens/participants_overview_screen.dart';
 import 'screens/add_solution_screen.dart';
+import 'screens/edit_quiz_screen.dart';
 
 SharedPreferences sharedPrefs;
 
@@ -123,6 +124,8 @@ class MyApp extends StatelessWidget {
                 AddSolutionScreen.routeName: (ctx) => AddSolutionScreen(),
                 AddQuizScreen.routeName: (ctx) => AddQuizScreen(),
                 QuizDetailScreen.routeName: (ctx) => QuizDetailScreen(),
+                  EditQuizScreen.routeName: (ctx) => EditQuizScreen(),
+
               }),
         ));
   }
