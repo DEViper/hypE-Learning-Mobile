@@ -4,6 +4,7 @@ import 'package:hype_learning/helpers/shared_preferences_decoder.dart';
 import 'package:hype_learning/providers/solution.dart';
 import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
+import 'package:hype_learning/screens/quiz_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -200,7 +201,12 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
             left: 190,
             bottom: 100,
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+     Navigator.of(context).popAndPushNamed(
+                        QuizDetailScreen.routeName,
+                        arguments:loadedTopic.quiz.id);
+
+                },
                 icon: Icon(
                   Icons.extension,
                   color: Colors.white,

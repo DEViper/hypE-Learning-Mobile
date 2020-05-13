@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:hype_learning/config/constants.dart';
 import 'package:hype_learning/providers/profile.dart';
+import 'package:hype_learning/providers/quiz.dart';
 import 'package:hype_learning/providers/solution.dart';
 import '../config/constants.dart';
 import '../models/http_exception.dart';
@@ -91,6 +90,9 @@ class Topics with ChangeNotifier {
             title: topicData['title'],
             description: topicData['description'],
             fileUrl: topicData['fileUrl'],
+            quiz: Quiz(
+                id: topicData['quiz'] != null ? topicData['quiz']['id'] : null,
+                title: topicData['quiz'] !=null ? topicData['quiz']['title'] : ''),
             solutions: topicData['solutions']));
       });
       _topics = loadedTopics;

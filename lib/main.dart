@@ -6,6 +6,7 @@ import 'package:hype_learning/screens/add_course_screen.dart';
 import 'package:hype_learning/screens/add_quiz_screen.dart';
 import 'package:hype_learning/screens/add_topic_screen.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
+import 'package:hype_learning/screens/quiz_detail_screen.dart';
 import 'package:hype_learning/screens/user_profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -121,6 +122,7 @@ class MyApp extends StatelessWidget {
                     CandidatesOverviewScreen(),
                 AddSolutionScreen.routeName: (ctx) => AddSolutionScreen(),
                 AddQuizScreen.routeName: (ctx) => AddQuizScreen(),
+                QuizDetailScreen.routeName: (ctx) => QuizDetailScreen(),
               }),
         ));
   }

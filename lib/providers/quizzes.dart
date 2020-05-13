@@ -34,6 +34,36 @@ class Quizzes with ChangeNotifier {
 
  
 
+ Future<void> fetchAndSetQuiz(int quizId) async {
+    var url = Constants.API_URL + 'quizzes/' + quizId.toString();
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+      );
+      final extractedData = json.decode(response.body);
+      if (extractedData == null) {
+        return;
+      }
+       final Quiz loadedQuiz = Quiz(
+            id: extractedData['id'],
+            title: extractedData['title'],
+      );
+      _quizzes.add(loadedQuiz);
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+
+
+
+
+
   Future<void> addQuiz(int id,Quiz quiz) async {
     final url = Constants.API_URL + 'quizzes/$id';
     try {

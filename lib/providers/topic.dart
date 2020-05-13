@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hype_learning/providers/quiz.dart';
 
 import 'solution.dart';
 
@@ -9,7 +10,7 @@ class Topic with ChangeNotifier {
   final String fileUrl;
   final List<Solution> solutions;
    int courseId;
-   int quizId;
+  final Quiz quiz;
 
   Topic({
     this.id,
@@ -18,6 +19,6 @@ class Topic with ChangeNotifier {
     this.fileUrl,
     this.courseId,
     this.solutions,
-    this.quizId
+    this.quiz
   });
 }
