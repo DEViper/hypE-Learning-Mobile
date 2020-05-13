@@ -45,7 +45,7 @@ class Quizzes with ChangeNotifier {
         },
       );
       final extractedData = json.decode(response.body);
-      if (extractedData == null) {
+      if (extractedData == {}) {
         return;
       }
        final Quiz loadedQuiz = Quiz(

@@ -110,21 +110,21 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
             child: Icon(Icons.arrow_back, color: Colors.white),
           ),
         ),
-        // if (role == 'instructor' || role == 'admin')
-        //   Positioned(
-        //       right: 50,
-        //       bottom: 20,
-        //       child: IconButton(
-        //           onPressed: () async {
-        //             await Provider.of<Topics>(context, listen: false)
-        //                 .deleteTopic(topicId);
-        //             Navigator.of(context).pop();
-        //           },
-        //           icon: Icon(
-        //             Icons.delete_sweep,
-        //             color: Colors.white,
-        //             size: 40,
-        //           ))),
+        if ((role == 'instructor' || role == 'admin' ) && loadedQuiz.id != null)
+          Positioned(
+              right: 50,
+              bottom: 20,
+              child: IconButton(
+                  onPressed: () async {
+                    await Provider.of<Quizzes>(context, listen: false)
+                        .deleteQuiz(loadedQuiz.id);
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(
+                    Icons.delete_sweep,
+                    color: Colors.white,
+                    size: 40,
+                  ))),
         // if (role == 'instructor' || role == 'admin')
         //   Positioned(
         //       left: 50,
