@@ -4,14 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:hype_learning/config/constants.dart';
-import 'package:hype_learning/providers/profile.dart';
 import 'package:hype_learning/providers/quiz.dart';
 import '../config/constants.dart';
 import '../models/http_exception.dart';
 import './quiz.dart';
+import './question.dart';
 
 class Quizzes with ChangeNotifier {
   List<Quiz> _quizzes = [];
+  List<Question> _questions = [];
   String authToken;
   int userId;
 
@@ -21,7 +22,11 @@ class Quizzes with ChangeNotifier {
     return [..._quizzes];
   }
 
- Quizzes update(authToken, userId, _quizzes) {
+  List<Question> get questions {
+    return [..._questions];
+  }
+
+  Quizzes update(authToken, userId, _quizzes) {
     this.authToken = authToken;
     this.userId = userId;
     this._quizzes = _quizzes;
@@ -32,9 +37,11 @@ class Quizzes with ChangeNotifier {
     return _quizzes.firstWhere((quiz) => quiz.id == id);
   }
 
- 
+  Question findQuestionById(int id) {
+    return _questions.firstWhere((question) => question.id == id);
+  }
 
- Future<void> fetchAndSetQuiz(int quizId) async {
+  Future<void> fetchAndSetQuiz(int quizId) async {
     var url = Constants.API_URL + 'quizzes/' + quizId.toString();
     try {
       final response = await http.get(
@@ -48,9 +55,9 @@ class Quizzes with ChangeNotifier {
       if (extractedData == {}) {
         return;
       }
-       final Quiz loadedQuiz = Quiz(
-            id: extractedData['id'],
-            title: extractedData['title'],
+      final Quiz loadedQuiz = Quiz(
+        id: extractedData['id'],
+        title: extractedData['title'],
       );
       _quizzes.add(loadedQuiz);
       notifyListeners();
@@ -59,12 +66,7 @@ class Quizzes with ChangeNotifier {
     }
   }
 
-
-
-
-
-
-  Future<void> addQuiz(int id,Quiz quiz) async {
+  Future<void> addQuiz(int id, Quiz quiz) async {
     final url = Constants.API_URL + 'quizzes/$id';
     try {
       final response = await http.post(
@@ -75,12 +77,10 @@ class Quizzes with ChangeNotifier {
         },
         body: json.encode({
           'title': quiz.title,
-    
         }),
       );
       final newQuiz = Quiz(
         title: quiz.title,
-
         id: json.decode(response.body)['id'],
       );
       _quizzes.add(newQuiz);
@@ -95,14 +95,14 @@ class Quizzes with ChangeNotifier {
   Future<void> updateQuiz(int id, Quiz newQuiz) async {
     final quizIndex = _quizzes.indexWhere((quiz) => quiz.id == id);
     if (quizIndex >= 0) {
-       final url = Constants.API_URL + 'quizzes/$id';
-      await http.put(url,headers: {
-          'Authorization': 'Bearer ' + this.authToken,
-          'Content-Type': 'application/json'
-        },
+      final url = Constants.API_URL + 'quizzes/$id';
+      await http.put(url,
+          headers: {
+            'Authorization': 'Bearer ' + this.authToken,
+            'Content-Type': 'application/json'
+          },
           body: json.encode({
             'title': newQuiz.title,
-
           }));
       _quizzes[quizIndex] = newQuiz;
       notifyListeners();
@@ -113,8 +113,7 @@ class Quizzes with ChangeNotifier {
 
   Future<void> deleteQuiz(int id) async {
     final url = Constants.API_URL + 'quizzes/$id';
-    final existingQuizIndex =
-        _quizzes.indexWhere((quiz) => quiz.id == id);
+    final existingQuizIndex = _quizzes.indexWhere((quiz) => quiz.id == id);
     var existingQuiz = _quizzes[existingQuizIndex];
     _quizzes.removeAt(existingQuizIndex);
     notifyListeners();
@@ -133,11 +132,40 @@ class Quizzes with ChangeNotifier {
     existingQuiz = null;
   }
 
-
- 
-
-
-
-
-
+  Future<void> addQuestion(int id, Question question) async {
+    final url = Constants.API_URL + 'quizzes/$id/question';
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer ' + this.authToken,
+          'Content-Type': 'application/json'
+        },
+        body: json.encode({
+          'title': question.title,
+          'a': question.a,
+          'b': question.b,
+          'c': question.c,
+          'd': question.d,
+          'correctAnswer': question.correct,
+          'quizId': id,
+        }),
+      );
+      final newQuestion = Question(
+          id: json.decode(response.body)['id'],
+          title: question.title,
+          a: question.a,
+          b: question.b,
+          c: question.c,
+          d: question.d,
+          correct: question.correct,
+          quizId: question.quizId);
+      _questions.add(newQuestion);
+      // _Quizs.insert(0, newQuiz); // at the start of the list
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
 }

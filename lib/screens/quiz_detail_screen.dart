@@ -16,6 +16,7 @@ import 'edit_topic_screen.dart';
 import 'topics_overview_screen.dart';
 import 'add_quiz_screen.dart';
 import 'edit_quiz_screen.dart';
+import 'add_quiz_question_screen.dart';
 
 class QuizDetailScreen extends StatefulWidget {
   // final String title;
@@ -143,31 +144,23 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                     color: Colors.white,
                     size: 40,
                   ))),
-        //     Positioned(
-        //         left: 190,
-        //         bottom: 20,
-        //         child: IconButton(
-        //             onPressed: (){},
-        //             icon: Icon(
-        //               Icons.book,
-        //               color: Colors.white,
-        //               size: 40,
-        //             ))),
-        //                  Positioned(
-        //         left: 190,
-        //         bottom: 100,
-        //         child: IconButton(
-        //             onPressed: () {
-        //  Navigator.of(context).popAndPushNamed(
-        //                     QuizDetailScreen.routeName,
-        //                     arguments:loadedTopic.quizId);
-
-        //             },
-        //             icon: Icon(
-        //               Icons.extension,
-        //               color: Colors.white,
-        //               size: 40,
-        //             )))
+            Positioned(
+                left: 190,
+                bottom: 20,
+                child: IconButton(
+                    onPressed: (){
+                      //  Provider.of<Quizzes>(context, listen: false)
+                      //   .addQuestion(loadedQuiz.id);
+                    Navigator.of(context).popAndPushNamed(
+                        AddQuizQuestionScreen.routeName,
+                        arguments: loadedQuiz.id);
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 40,
+                    ))),
+                         
       ],
     );
 
