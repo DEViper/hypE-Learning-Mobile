@@ -13,6 +13,7 @@ import './question.dart';
 class Quizzes with ChangeNotifier {
   List<Quiz> _quizzes = [];
   List<Question> _questions = [];
+  int _result;
   String authToken;
   int userId;
 
@@ -24,6 +25,10 @@ class Quizzes with ChangeNotifier {
 
   List<Question> get questions {
     return [..._questions];
+  }
+
+  int get result {
+    return _result;
   }
 
   Quizzes update(authToken, userId, _quizzes) {
@@ -55,10 +60,21 @@ class Quizzes with ChangeNotifier {
       if (extractedData == {}) {
         return;
       }
+
+      var questions = List<Question>();
+      extractedData['questions'].forEach((questionData) {
+        questions.add(Question(
+          title: questionData['title'],
+          a: questionData['a'],
+          b: questionData['b'],
+          c: questionData['c'],
+          d: questionData['d'],
+        ));
+      });
       final Quiz loadedQuiz = Quiz(
-        id: extractedData['id'],
-        title: extractedData['title'],
-      );
+          id: extractedData['id'],
+          title: extractedData['title'],
+          questions: questions);
       _quizzes.add(loadedQuiz);
       notifyListeners();
     } catch (error) {
@@ -166,6 +182,26 @@ class Quizzes with ChangeNotifier {
     } catch (error) {
       print(error);
       throw error;
+    }
+  }
+
+  Future<void> solveQuiz(int id, List<String> answers) async {
+    // final quizIndex = _quizzes.indexWhere((quiz) => quiz.id == id);
+    if (id >= 0) {
+      final url = Constants.API_URL + 'quizzes/solve/$id';
+      final response = await http.post(url,
+          headers: {
+            'Authorization': 'Bearer ' + this.authToken,
+            'Content-Type': 'application/json'
+          },
+          body: json.encode({
+            'answers': answers,
+          }));
+      _result = int.parse(response.body);
+      // _quizzes[quizIndex] = newQuiz;
+      notifyListeners();
+    } else {
+      print('...');
     }
   }
 }

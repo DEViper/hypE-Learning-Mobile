@@ -30,7 +30,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
   final role = SharedPreferencesDecoder.getField("role");
   var _isInit = true;
   var _isLoading = false;
-  
+
   @override
   void initState() {
     // Provider.of<Courses>(context).fetchAndSetProducts(); // WON'T WORK!
@@ -49,16 +49,19 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
         _isLoading = true;
       });
       final topicId = ModalRoute.of(context).settings.arguments;
-      Provider.of<Topics>(context).fetchAndSetSolutions(topicId).then((_) {
-        setState(() {
-          _isLoading = false;
+      if (role == 'instructor' || role == 'admin') {
+        Provider.of<Topics>(context).fetchAndSetSolutions(topicId).then((_) {
+          setState(() {
+            _isLoading = false;
+          });
         });
-      });
+      } else {
+        _isLoading = false;
+      }
     }
     _isInit = false;
     super.didChangeDependencies();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +107,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       }
     }
 
-      _launchSolution(String fileUrl) async {
+    _launchSolution(String fileUrl) async {
       final url = fileUrl;
       if (await canLaunch(url)) {
         await launch(url);
@@ -113,17 +116,15 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       }
     }
 
-  final addQuizButton = Container(
+    final addQuizButton = Container(
         padding: EdgeInsets.symmetric(vertical: 16.0),
         width: MediaQuery.of(context).size.width,
         child: RaisedButton(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           onPressed: () {
-            Navigator.of(context).pushNamed(
-              AddQuizScreen.routeName,
-              arguments: {topicId}
-            );
+            Navigator.of(context)
+                .pushNamed(AddQuizScreen.routeName, arguments: {topicId});
           },
           color: Colors.blue[800],
           child: Text("Dodaj quiz",
@@ -132,7 +133,6 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold)),
         ));
-
 
     final topContent = Stack(
       children: <Widget>[
@@ -197,15 +197,14 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   color: Colors.white,
                   size: 40,
                 ))),
-                     Positioned(
+        Positioned(
             left: 190,
             bottom: 100,
             child: IconButton(
                 onPressed: () {
-     Navigator.of(context).popAndPushNamed(
-                        QuizDetailScreen.routeName,
-                        arguments:loadedTopic.quiz.id);
-
+                  Navigator.of(context).popAndPushNamed(
+                      QuizDetailScreen.routeName,
+                      arguments: loadedTopic.quiz.id);
                 },
                 icon: Icon(
                   Icons.extension,
@@ -214,9 +213,6 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                 )))
       ],
     );
-
-
-
 
     final addSolutionButton = FloatingActionButton(
       onPressed: () {
@@ -230,20 +226,17 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       backgroundColor: Colors.blue,
     );
 
-
-
-
     ListTile makeListTile(Solution solution) => ListTile(
           contentPadding:
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           title: Text(
-            solution.solver.firstName + solution.solver.lastName, 
+            solution.solver.firstName + solution.solver.lastName,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           trailing:
               Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
           onTap: () {
-          _launchSolution(solution.fileUrl);
+            _launchSolution(solution.fileUrl);
           },
         );
 
@@ -265,16 +258,13 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: solutions != null ? solutions.length : 0 ,
+        itemCount: solutions != null ? solutions.length : 0,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           value: solutions[i],
           child: makeCard(solutions[i]),
         ),
       ),
     );
-
-
-
 
     final bottomContent = Container(
         width: MediaQuery.of(context).size.width,
@@ -284,12 +274,9 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
             Center(
               child: Column(
                 children: <Widget>[
-                if (role == 'instructor' || role == 'admin')
-                  addQuizButton,
-                    if (role == 'student')
-                  addSolutionButton,
-                     if (role == 'instructor' || role == 'admin')
-                    makeBody,
+                  if (role == 'instructor' || role == 'admin') addQuizButton,
+                  if (role == 'student') addSolutionButton,
+                  if (role == 'instructor' || role == 'admin') makeBody,
                 ],
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:hype_learning/providers/solution.dart';
 import 'package:hype_learning/providers/topic.dart';
 import 'package:hype_learning/providers/topics.dart';
 import 'package:hype_learning/screens/edit_course_screen.dart';
+import 'package:hype_learning/screens/show_quiz_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -144,6 +145,7 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                     color: Colors.white,
                     size: 40,
                   ))),
+                   if ((role == 'instructor' || role == 'admin') && loadedQuiz.id != null)
             Positioned(
                 left: 190,
                 bottom: 20,
@@ -160,10 +162,28 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                       color: Colors.white,
                       size: 40,
                     ))),
+                       Positioned(
+                left: 190,
+                bottom: 100,
+                child: IconButton(
+                    onPressed: (){
+                    //   //  Provider.of<Quizzes>(context, listen: false)
+                    //   //   .addQuestion(loadedQuiz.id);
+                    Navigator.of(context).popAndPushNamed(
+                        ShowQuizScreen.routeName,
+                        arguments: loadedQuiz.id);
+                    },
+                    icon: Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 40,
+                    ))),
                          
       ],
     );
 
+
+// play_arrow
     final addSolutionButton = FloatingActionButton(
       onPressed: () {
         Navigator.of(context).pushReplacementNamed(AddSolutionScreen.routeName,

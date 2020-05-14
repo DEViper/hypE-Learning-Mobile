@@ -17,7 +17,7 @@ class Question with ChangeNotifier {
     @required this.b,
     @required this.c,
     @required this.d,
-    @required this.correct,
+    this.correct,
     this.quizId,
   });
 }

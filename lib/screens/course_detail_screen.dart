@@ -53,7 +53,7 @@ class CourseDetailScreen extends StatelessWidget {
     );
 
     final topContent = Stack(
-      children: <Widget>[
+      children: <Widget>[ 
         Container(
           height: MediaQuery.of(context).size.height * 0.5,
           padding: EdgeInsets.all(40.0),
