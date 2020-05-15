@@ -45,5 +45,11 @@ void main() {
       expect(result,'Password is too short');
     });
 
+      unitTest.test('Password is ok',(){
+
+      var result = PasswordFieldValidator.validate('Testowe34');
+      expect(result, null);
+    });
+
   // });
 }
