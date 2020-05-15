@@ -9,6 +9,25 @@ import 'signUp_screen.dart';
 
 enum AuthMode { Signup, Login }
 
+class EmailFieldValidator{
+  static String validate(String value)
+  {
+return value.isEmpty? 'Email cant be empty' : null;
+
+  }
+   
+}
+
+
+class PasswordFieldValidator{
+  static String validate(String value)
+  {
+return (value.isEmpty || value.length < 8)?  'Password is too short' : null;
+
+  }
+   
+}
+
 class SignInScreen extends StatelessWidget {
   static const routeName = '/auth';
 
@@ -226,11 +245,12 @@ class _SignInCardState extends State<SignInCard>
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
-                      return 'Invalid email!';
-                    }
-                  },
+                  // validator: (value) {
+                  //   if (value.isEmpty || !value.contains('@')) {
+                  //     return 'Invalid email!';
+                  //   }
+                  // },
+                  validator:EmailFieldValidator.validate,
                   onSaved: (value) {
                     _signInData['email'] = value;
                   },
@@ -239,11 +259,7 @@ class _SignInCardState extends State<SignInCard>
                   decoration: InputDecoration(labelText: 'Password'),
                   obscureText: true,
                   controller: _passwordController,
-                  validator: (value) {
-                    if (value.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
-                    }
-                  },
+                   validator:PasswordFieldValidator.validate,
                   onSaved: (value) {
                     _signInData['password'] = value;
                   },
